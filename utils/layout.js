@@ -23,6 +23,11 @@ export class LayoutManager {
     this.y = this.resetStack[this.resetStack.length - 1][1];
   }
 
+  resetXY() {
+    this.resetX();
+    this.resetY();
+  }
+
   pushReset(x = this.x, y = this.y) {
     this.resetStack.push([x, y]);
   }
