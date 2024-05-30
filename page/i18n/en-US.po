@@ -1,4 +1,2 @@
-msgid "hello_world"
-msgstr "hiii :3"
 msgid "no_more_posts"
-msgstr "No more posts loaded"
+msgstr "No more posts\nwere loaded"
