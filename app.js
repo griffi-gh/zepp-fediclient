@@ -1,6 +1,6 @@
 App({
   globalData: {},
-  
+
   onCreate(options) {
     console.log('app on create invoke')
   },

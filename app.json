@@ -1,7 +1,7 @@
 {
   "configVersion": "v2",
   "app": {
-    "appId": 20000,
+    "appId": 56349,
     "appName": "FediClient",
     "appType": "app",
     "version": {
@@ -27,6 +27,12 @@
           "pages": [
             "page/timeline"
           ]
+        },
+        "app-side": {
+          "path": "app-side/index"
+        },
+        "setting": {
+          "path": "setting/index"
         }
       },
       "platforms": [
