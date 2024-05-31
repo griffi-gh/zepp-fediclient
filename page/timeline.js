@@ -2,6 +2,7 @@ import { gettext as i18n } from 'i18n';
 import { deviceInfo, safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
 import { PostComponent, SeparatorComponent } from '../utils/components.js';
+//const { req_helper } = getApp()._options.globalData;
 
 const test_posts = [
   //https://woem.men/notes/9twtytvkvyky021f
@@ -42,6 +43,25 @@ Page({
 
     hmUI.setLayerScrolling(true);
     hmUI.updateStatusBarTitle("Timeline");
+
+    // req_helper.request("fetchPublicTimeline", data => {
+    //   console.log("got data: " + JSON.stringify(data));
+    //   for (const post of data) {
+    //     (new PostComponent(post)).layout(my_man);
+    //     (new SeparatorComponent(10)).layout(my_man);
+    //   }
+    //   hmUI.createWidget(hmUI.widget.TEXT, {
+    //     x: 0,
+    //     y: my_man.y,
+    //     w: deviceInfo.width,
+    //     h: deviceInfo.height / 4,
+    //     text: i18n("no_more_posts"),
+    //     text_size: 18,
+    //     color: 0xAAAAAA,
+    //     align_h: hmUI.align.CENTER_H,
+    //     align_v: hmUI.align.CENTER_V,
+    //   });
+    // });
 
     for (const post of test_posts) {
       (new PostComponent(post)).layout(my_man);

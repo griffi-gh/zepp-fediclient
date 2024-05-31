@@ -1,5 +1,7 @@
 import { textSize, wrapText } from './util.js';
 
+//TODO show post replies
+
 // XX username
 // XX @acct@domain.name
 export class UserHeaderComponent {
@@ -178,6 +180,7 @@ export class PostComponent {
       post.like_active,
       post.reblogs,
       post.reblog_active,
+      // post.replies,
     );
   }
 
