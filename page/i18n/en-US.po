@@ -1,8 +1,17 @@
-msgid "no_more_posts"
-msgstr "No more posts\nwere loaded"
+msgid "app_name"
+msgstr "FediClient"
+
+msgid "timeline_title"
+msgstr "Timeline"
+
 msgid "timeline_home"
 msgstr "Home"
+
 msgid "timeline_public"
 msgstr "Public"
+
 msgid "timeline_local"
 msgstr "Local"
+
+msgid "no_more_posts"
+msgstr "No more posts\nwere loaded"

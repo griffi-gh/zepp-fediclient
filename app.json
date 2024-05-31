@@ -25,6 +25,7 @@
       "module": {
         "page": {
           "pages": [
+            "page/index",
             "page/timeline"
           ]
         },
