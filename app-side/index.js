@@ -3,7 +3,7 @@ import { MessageBuilder } from "../lib/zepp/message.js";
 const messageBuilder = new MessageBuilder();
 
 const DEFAULT_TIMELINE = "local";
-const DEFAULT_LIMIT = 10;
+const DEFAULT_LIMIT = 15;
 
 //TODO: move to settings
 //for now, i just picked a cute random instance :p
