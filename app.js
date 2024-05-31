@@ -1,23 +1,24 @@
-//import { RequestHelper } from './utils/request_model.js';
+import "./lib/zepp/device-polyfill.js";
+import { MessageBuilder } from "./lib/zepp/message.js";
 
 App({
   globalData: {
-    req_helper: null
+    messageBuilder: null
   },
   onCreate(options) {
     console.log('app on create invoke');
 
-    // let appId;
-    // if (!hmApp.packageInfo) {
-    //   throw new Error('Set appId, appId needs to be the same as the configuration in app.json');
-    // } else {
-    //   appId = hmApp.packageInfo().appId;
-    // }
+    if (!hmApp.packageInfo) {
+      throw new Error('Set appId, appId needs to be the same as the configuration in app.json');
+    }
+    const appId = hmApp.packageInfo().appId;
 
-    //this.globalData.req_helper = new RequestHelper();
+    this.globalData.messageBuilder = new MessageBuilder({ appId });
+    this.globalData.messageBuilder.connect();
   },
   onDestroy(options) {
     console.log('app on destroy invoke');
-    //hmBle.disConnect();
+    this.globalData.messageBuilder.disConnect();
+    this.globalData.messageBuilder = null;
   }
 })

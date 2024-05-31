@@ -132,26 +132,26 @@ export class ReactionComponent {
 
 export class PostReactionsBlockComponent {
   constructor(
-    like_count,
-    like_active,
-    reblog_count,
-    reblog_active,
+    like_count = 0,
+    like_active = false,
+    reblog_count = 0,
+    reblog_active = false,
+    reply_count = 0,
   ) {
     this.like_count_component = new ReactionComponent(
-      like_count,
-      like_active,
-      "heart.png",
-      "heart-active.png",
-      DEFAULT_REACT_COLOR_INACTIVE,
-      0xee1111,
+      like_count, like_active,
+      "heart.png", "heart-active.png",
+      DEFAULT_REACT_COLOR_INACTIVE, 0xee1111,
     );
     this.reblog_count_component = new ReactionComponent(
-      reblog_count,
-      reblog_active,
-      "reblog.png",
-      "reblog-active.png",
-      DEFAULT_REACT_COLOR_INACTIVE,
-      0x22bb22,
+      reblog_count, reblog_active,
+      "reblog.png", "reblog-active.png",
+      DEFAULT_REACT_COLOR_INACTIVE, 0x22bb22,
+    );
+    this.reply_count_component = new ReactionComponent(
+      reply_count, false,
+      "reply.png", null,
+      DEFAULT_REACT_COLOR_INACTIVE, null,
     );
   }
 
@@ -160,6 +160,9 @@ export class PostReactionsBlockComponent {
     this.like_count_component.layout(man);
     man.x = Math.max(man.x, man.area.x0 + man.area.w * 0.33);
     this.reblog_count_component.layout(man);
+    man.x = Math.max(man.x, man.area.x0 + man.area.w * 0.66);
+    this.reply_count_component.layout(man);
+    //HACK only takes height from like count component into account
     this.like_count_component.endl(man);
   }
 }
@@ -180,7 +183,7 @@ export class PostComponent {
       post.like_active,
       post.reblogs,
       post.reblog_active,
-      // post.replies,
+      post.replies,
     );
   }
 
@@ -204,6 +207,7 @@ export class PostComponent {
       text_size: CONTENT_TEXT_SIZE,
       color: 0xFFFFFF,
       align_h: hmUI.align.LEFT,
+      text_style: hmUI.text_style.ELLIPSIS,
     });
     man.account(0, sz);
 
@@ -228,5 +232,24 @@ export class SeparatorComponent {
       color: this.color,
     });
     man.account(0, this.height);
+  }
+}
+
+export class PostFeedComponent {
+  constructor(posts) {
+    this.posts = posts;
+    this.components = posts.map(post => {
+      return {
+        post: new PostComponent(post),
+        separator: new SeparatorComponent(10),
+      }
+    });
+  }
+
+  layout(man) {
+    for (const { post, separator } of this.components) {
+      post.layout(man);
+      separator.layout(man);
+    }
   }
 }

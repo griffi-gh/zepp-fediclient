@@ -25,7 +25,8 @@
       "module": {
         "page": {
           "pages": [
-            "page/timeline"
+            "page/timeline",
+            "page/timeline-selector"
           ]
         },
         "app-side": {
