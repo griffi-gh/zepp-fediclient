@@ -1,6 +1,5 @@
-import { textSize, wrapText } from './util.js';
-
-//TODO show post replies
+import { gettext as i18n } from 'i18n';
+import { deviceInfo, textSize, wrapText } from './util.js';
 
 // XX username
 // XX @acct@domain.name
@@ -251,5 +250,23 @@ export class PostFeedComponent {
       post.layout(man);
       separator.layout(man);
     }
+  }
+}
+
+export class NoMorePostsLoadedComponent {
+  constructor() {}
+  layout(man) {
+    this._text = hmUI.createWidget(hmUI.widget.TEXT, {
+      x: 0,
+      y: man.y,
+      w: deviceInfo.width,
+      h: deviceInfo.height / 4,
+      text: i18n("no_more_posts"),
+      text_size: 18,
+      color: 0xAAAAAA,
+      align_h: hmUI.align.CENTER_H,
+      align_v: hmUI.align.CENTER_V,
+    });
+    man.account(0, deviceInfo.height / 4);
   }
 }

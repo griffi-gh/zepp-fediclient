@@ -2,7 +2,7 @@ import { MessageBuilder } from "../lib/zepp/message.js";
 
 const messageBuilder = new MessageBuilder();
 
-const DEFAULT_TIMELINE = "public";
+const DEFAULT_TIMELINE = "local";
 const DEFAULT_LIMIT = 10;
 
 //TODO: move to settings

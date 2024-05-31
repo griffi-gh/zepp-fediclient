@@ -1,7 +1,10 @@
 import { gettext as i18n } from 'i18n';
-import { deviceInfo, safeArea } from '../utils/util.js';
+import { safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
-import { PostFeedComponent } from '../utils/components.js';
+import {
+  PostFeedComponent,
+  NoMorePostsLoadedComponent,
+} from '../utils/components.js';
 
 const { messageBuilder } = getApp()._options.globalData;
 
@@ -34,18 +37,8 @@ Page({
       .then(data => {
         (new PostFeedComponent(data))
           .layout(man);
-
-        hmUI.createWidget(hmUI.widget.TEXT, {
-          x: 0,
-          y: man.y,
-          w: deviceInfo.width,
-          h: deviceInfo.height / 4,
-          text: i18n("no_more_posts"),
-          text_size: 18,
-          color: 0xAAAAAA,
-          align_h: hmUI.align.CENTER_H,
-          align_v: hmUI.align.CENTER_V,
-        });
+        (new NoMorePostsLoadedComponent())
+          .layout(man);
       });
   }
 });

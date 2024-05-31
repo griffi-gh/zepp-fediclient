@@ -27,7 +27,7 @@ export function textSize(text, text_size, text_width = safeArea.w) {
 }
 
 export function wrapText(text, text_size, width = safeArea.w) {
-  const words = text.split(" "); // /\s/g
+  const words = text.split(/\s/g); // /\s/g
 
   let wrappedText = "";
   let line = '';
