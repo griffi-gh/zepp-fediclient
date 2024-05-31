@@ -21,6 +21,7 @@ Page({
     let yy = safeArea.y0;
 
     hmUI.updateStatusBarTitle(i18n("app_name"));
+    hmUI.setLayerScrolling(false);
 
     hmUI.createWidget(hmUI.widget.TEXT, {
       x: safeArea.x0,

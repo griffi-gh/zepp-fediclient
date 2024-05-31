@@ -1,6 +1,9 @@
 msgid "app_name"
 msgstr "FediClient"
 
+msgid "loading"
+msgstr "Loading..."
+
 msgid "timeline_title"
 msgstr "Timeline"
 

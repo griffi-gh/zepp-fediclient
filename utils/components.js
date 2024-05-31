@@ -71,6 +71,12 @@ export class UserHeaderComponent {
 
     man.resetX();
   }
+
+  delete() {
+    this._img.delete();
+    this._text_username.delete();
+    this._text_acct.delete();
+  }
 }
 
 export const DEFAULT_REACT_COLOR_INACTIVE = 0xa3a3a3;
@@ -93,7 +99,6 @@ export class ReactionComponent {
   }
 
   layout(man) {
-
     const ICON_ALIGNMENT_MAGIC = 6; //there's no meaning to this, it just looks good
     const REACT_ICN_SIZE = 16;
     const REACT_ICN_TEXT_PADDING = 4;
@@ -125,6 +130,11 @@ export class ReactionComponent {
     //TODO remove hardcoded height
     man.account(0, this._endl_height);
     man.resetX();
+  }
+
+  delete() {
+    this._img.delete();
+    this._text.delete();
   }
 }
 
@@ -163,6 +173,12 @@ export class PostReactionsBlockComponent {
     this.reply_count_component.layout(man);
     //HACK only takes height from like count component into account
     this.like_count_component.endl(man);
+  }
+
+  delete() {
+    this.like_count_component.delete();
+    this.reblog_count_component.delete();
+    this.reply_count_component.delete();
   }
 }
 
@@ -213,6 +229,12 @@ export class PostComponent {
     //REACT BLOCK
     this.post_reactions_block_component.layout(man);
   }
+
+  delete() {
+    this.user_header_component.delete();
+    this._body.delete();
+    this.post_reactions_block_component.delete();
+  }
 }
 
 // Separator component, just a line
@@ -231,6 +253,10 @@ export class SeparatorComponent {
       color: this.color,
     });
     man.account(0, this.height);
+  }
+
+  delete() {
+    this._rect.delete();
   }
 }
 
@@ -251,10 +277,18 @@ export class PostFeedComponent {
       separator.layout(man);
     }
   }
+
+  delete() {
+    for (const { post, separator } of this.components) {
+      post.delete();
+      separator.delete();
+    }
+  }
 }
 
 export class NoMorePostsLoadedComponent {
   constructor() {}
+
   layout(man) {
     this._text = hmUI.createWidget(hmUI.widget.TEXT, {
       x: 0,
@@ -268,5 +302,9 @@ export class NoMorePostsLoadedComponent {
       align_v: hmUI.align.CENTER_V,
     });
     man.account(0, deviceInfo.height / 4);
+  }
+
+  delete() {
+    this._text.delete();
   }
 }
