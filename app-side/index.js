@@ -59,6 +59,16 @@ async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT)
 
 function onRequest(ctx, req_data) {
   switch (req_data.request) {
+    // case "queryInfo":
+    //   console.log("queryInfo request");
+    //   ctx.response({
+    //     requestId: ctx.request.traceId,
+    //     data: {
+    //       instance: FEDI_DOMAIN,
+    //     },
+    //   });
+    //   break;
+
     case "fetchTimeline":
       const timeline = req_data.timeline ?? DEFAULT_TIMELINE;
       const limit = req_data.limit ?? DEFAULT_LIMIT;
@@ -72,6 +82,7 @@ function onRequest(ctx, req_data) {
         });
       });
       break;
+
     default:
       console.log("unhandled request: " + req_data.request);
   }
