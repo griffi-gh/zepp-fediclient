@@ -1,2 +1,8 @@
 msgid "no_more_posts"
 msgstr "No more posts\nwere loaded"
+msgid "timeline_home"
+msgstr "Home"
+msgid "timeline_public"
+msgstr "Public"
+msgid "timeline_local"
+msgstr "Local"
