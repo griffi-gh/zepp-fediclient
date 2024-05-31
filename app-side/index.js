@@ -5,6 +5,11 @@ const messageBuilder = new MessageBuilder();
 const DEFAULT_TIMELINE = "local";
 const DEFAULT_LIMIT = 15;
 
+const COMMON_HEADERS = {
+  "User-Agent": "ZeppOSFediClient/1.0 (dev; prasol258_at_gmail_dot_com)",
+  "X-Client": "ZeppOSFediClient",
+};
+
 //TODO: move to settings
 //for now, i just picked a cute random instance :p
 const FEDI_DOMAIN = "https://woem.men";
@@ -15,9 +20,8 @@ async function fetchSomething(url) {
     url,
     method: 'GET',
     headers: {
-      "User-Agent": "ZeppOSFediClient/1.0 (dev; prasol258_at_gmail_dot_com)",
       "Accept": "application/json",
-      "X-Client": "ZeppOSFediClient",
+      ...COMMON_HEADERS,
     }
   });
   const resBody =
@@ -72,8 +76,14 @@ function onRequest(ctx, req_data) {
     case "fetchTimeline":
       const timeline = req_data.timeline ?? DEFAULT_TIMELINE;
       const limit = req_data.limit ?? DEFAULT_LIMIT;
-      console.log(`fetching up to ${limit} posts from "${timeline}" timeline...`);
+      const filter_empty = !!req_data.filter_empty; // experimental
+
+      console.log(`fetching up to ${limit} posts from "${timeline}" timeline ${filter_empty ? "with" : "without"} filtering...`);
+
       fetchTimeline(timeline).then(res_data => {
+        if (filter_empty) {
+          res_data = res_data.filter(post => post.content.length > 0);
+        }
         console.log("Done (trace request id: " + ctx.request.traceId + ")");
         console.log(JSON.stringify(res_data));
         ctx.response({
