@@ -65,6 +65,7 @@ async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT)
   const posts = [];
   for (const post of posts_raw) {
     posts.push({
+      profile_pic: post.account.avatar ?? null,
       username: post.account.display_name ?? post.account.username,
       acct: post.account.acct,
       id: post.id,
