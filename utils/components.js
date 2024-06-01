@@ -1,5 +1,42 @@
 import { gettext as i18n } from 'i18n';
 import { deviceInfo, textSize, wrapText } from './util.js';
+import { ensureImageCached } from '../utils/image_cache.js';
+
+export class InternetImageComponent {
+  constructor(src, width, height) {
+    this.src = src;
+    this.width = width;
+    this.height = height;
+  }
+
+  layout(man) {
+    const man_x = man.x;
+    const man_y = man.y;
+    ensureImageCached(
+      this.src, this.width, this.height,
+      (pth) => {
+        if (this._deleted) return;
+        console.log("image loaded: " + pth);
+        this._img = hmUI.createWidget(hmUI.widget.IMG, {
+          src: pth,
+          x: man_x,
+          y: man_y,
+          w: this.width,
+          h: this.height,
+        });
+      }
+    );
+  }
+
+  delete() {
+    this._deleted = true;
+    if (this._img) {
+      hmUI.deleteWidget(this._img);
+    }
+  }
+}
+
+const PROFILE_PIC_SIZE = 28;
 
 // XX username
 // XX @acct@domain.name
@@ -9,28 +46,42 @@ export class UserHeaderComponent {
   //   this.acct = post.acct;
   // }
 
-  constructor(username, acct, profile_pic = "user-generic.png") {
+  constructor(username, acct, profile_pic = null) {
     this.username = username;
     this.acct = acct;
     this.profile_pic = profile_pic;
+    if (this.profile_pic) {
+      this.netimg_component = new InternetImageComponent(
+        this.profile_pic,
+        PROFILE_PIC_SIZE,
+        PROFILE_PIC_SIZE,
+      );
+    }
   }
 
   layout(man) {
-    const PROFILE_PIC_SIZE = 24;
-    const PROFILE_PIC_Y_OFFSET = 10;
+    const PROFILE_PIC_Y_OFFSET = 6;
     const PROIFLE_PIC_X_PADDING = 4;
     const USERNAME_FONT_SIZE = 16;
     const USERNAME_HANDLE_PADDING = -5;
     const HANDLE_FONT_SIZE = 14;
     const USER_CONTENT_PADDING = 0;
 
-    this._img = hmUI.createWidget(hmUI.widget.IMG, {
-      src: this.profile_pic,
-      x: man.x,
-      y: man.y + PROFILE_PIC_Y_OFFSET,
-      w: PROFILE_PIC_SIZE,
-      h: PROFILE_PIC_SIZE,
-    });
+    if (this.profile_pic) {
+      man.pushReset();
+      man.y += PROFILE_PIC_Y_OFFSET;
+      this.netimg_component.layout(man);
+      man.resetXY();
+      man.popReset();
+    } else {
+      this._img = hmUI.createWidget(hmUI.widget.IMG, {
+        src: "user-generic.png",
+        x: man.x,
+        y: man.y + PROFILE_PIC_Y_OFFSET,
+        w: PROFILE_PIC_SIZE,
+        h: PROFILE_PIC_SIZE,
+      });
+    }
 
     man.account(PROFILE_PIC_SIZE + PROIFLE_PIC_X_PADDING, 0);
     const sub_area_w = PROFILE_PIC_SIZE + PROIFLE_PIC_X_PADDING;
@@ -73,9 +124,10 @@ export class UserHeaderComponent {
   }
 
   delete() {
-    this._img.delete();
-    this._text_username.delete();
-    this._text_acct.delete();
+    if (this._img) hmUI.deleteWidget(this._img);
+    if (this.netimg_component) this.netimg_component.delete();
+    hmUI.deleteWidget(this._text_username);
+    hmUI.deleteWidget(this._text_acct);
   }
 }
 
@@ -133,8 +185,8 @@ export class ReactionComponent {
   }
 
   delete() {
-    this._img.delete();
-    this._text.delete();
+    hmUI.deleteWidget(this._img);
+    hmUI.deleteWidget(this._text);
   }
 }
 
@@ -192,6 +244,7 @@ export class PostComponent {
     this.user_header_component = new UserHeaderComponent(
       post.username,
       post.acct,
+      post.profile_pic,
     );
     this.post_reactions_block_component = new PostReactionsBlockComponent(
       post.likes,
@@ -232,7 +285,7 @@ export class PostComponent {
 
   delete() {
     this.user_header_component.delete();
-    this._body.delete();
+    hmUI.deleteWidget(this._body);
     this.post_reactions_block_component.delete();
   }
 }
@@ -256,7 +309,7 @@ export class SeparatorComponent {
   }
 
   delete() {
-    this._rect.delete();
+    hmUI.deleteWidget(this._rect);
   }
 }
 
@@ -305,6 +358,6 @@ export class NoMorePostsLoadedComponent {
   }
 
   delete() {
-    this._text.delete();
+    hmUI.deleteWidget(this._text);
   }
 }

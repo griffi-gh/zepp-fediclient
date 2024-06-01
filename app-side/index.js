@@ -1,9 +1,12 @@
 import { MessageBuilder } from "../lib/zepp/message.js";
+import createTgaBuffer from "../utils/tga.js";
+import jpeg from 'jpeg-js';
 
 const messageBuilder = new MessageBuilder();
 
 const DEFAULT_TIMELINE = "local";
 const DEFAULT_LIMIT = 15;
+const TARGET_FORMAT = "png"; // "tga" or "png"
 
 const COMMON_HEADERS = {
   "User-Agent": "ZeppOSFediClient/1.0 (dev; prasol258_at_gmail_dot_com)",
@@ -31,6 +34,21 @@ async function fetchSomething(url) {
   return resBody;
 }
 
+//This may not work at all
+async function tryFetchSomethingAsBinary(url) {
+  console.log("fetch " + url);
+  const res = await fetch({
+    url,
+    method: 'GET',
+    headers: {
+      "Accept": "application/json",
+      ...COMMON_HEADERS,
+    }
+  });
+  return res.arrayBuffer();
+}
+
+
 async function fetchTimelineRaw(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT) {
   const [actual_timeline, query] = {
     "public": ["public", ""],
@@ -47,6 +65,7 @@ async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT)
   const posts = [];
   for (const post of posts_raw) {
     posts.push({
+      profile_pic: post.account.avatar ?? null,
       username: post.account.display_name ?? post.account.username,
       acct: post.account.acct,
       id: post.id,
@@ -91,6 +110,40 @@ function onRequest(ctx, req_data) {
           data: res_data,
         });
       });
+      break;
+
+    case "image":
+      const { url, width, height } = req_data;
+
+      console.log("image request for " + url + " with size " + width + "x" + height);
+
+      const url_encoded = encodeURIComponent(url);
+      const desired_format = TARGET_FORMAT === "tga" ? "jpg" : "png";
+      const url_final = `https://wsrv.nl/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`;
+
+      console.log("will go to " + url_final + " to download image");
+
+      tryFetchSomethingAsBinary(url_final).then(src_buf => {
+        console.log("image downloaded");
+
+        let buf
+        if (TARGET_FORMAT === "tga") {
+          const rawImageData = jpeg.decode(src_buf, { formatAsRGBA: false });
+          console.log("decoded successfully");
+          buf = createTgaBuffer(width, height, rawImageData.data, true);
+        } else if (TARGET_FORMAT === "png") {
+          buf = Buffer.from(src_buf);
+        }
+
+        // ctx.response requires json
+        // so use raw sendHmProtocol call instead
+        messageBuilder.sendHmProtocol({
+          requestId: ctx.request.traceId,
+          dataBin: buf,
+          type: 0x2, //"Response"
+        });
+      });
+
       break;
 
     default:
