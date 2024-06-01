@@ -42,13 +42,12 @@ export function ensureImageCached(url, width = null, height = null, callback = _
       //TODO avoid base64
       console.log("image downloaded");
 
-      // const src_buf = Buffer.from(data.data, "base64");
       const buf = new Uint8Array(src_buf);
 
       console.log("buf len " + buf.length);
       console.log(JSON.stringify(buf.slice(0, 16)));
 
-      const fileId = hmFS.open_asset(path, hmFS.O_WRONLY | hmFS.O_CREAT /*| hmFS.O_EXCL*/);
+      const fileId = hmFS.open_asset(path, hmFS.O_WRONLY | hmFS.O_CREAT | hmFS.O_EXCL);
       hmFS.write(fileId, buf.buffer, 0, buf.length)
       hmFS.close(fileId);
 

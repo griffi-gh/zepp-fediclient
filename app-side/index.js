@@ -7,6 +7,7 @@ const messageBuilder = new MessageBuilder();
 
 const DEFAULT_TIMELINE = "local";
 const DEFAULT_LIMIT = 15;
+const TARGET_FORMAT = "png"; // "tga" or "png"
 
 const COMMON_HEADERS = {
   "User-Agent": "ZeppOSFediClient/1.0 (dev; prasol258_at_gmail_dot_com)",
@@ -114,103 +115,35 @@ function onRequest(ctx, req_data) {
     case "image":
       const { url, width, height } = req_data;
 
-      //TODO if width/height is not provided, skip resizing
-      //TODO if width/height is provided, but is the same as original, skip resizing
-
       console.log("image request for " + url + " with size " + width + "x" + height);
 
-      const url_final = `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=png&w=${width}&h=${height}`;
+      const url_encoded = encodeURIComponent(url);
+      const desired_format = TARGET_FORMAT === "tga" ? "jpg" : "png";
+      const url_final = `https://wsrv.nl/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`;
 
       console.log("will go to " + url_final + " to download image");
 
-      tryFetchSomethingAsBinary(url_final).then(buf => {
+      tryFetchSomethingAsBinary(url_final).then(src_buf => {
         console.log("image downloaded");
 
-        // const rawImageData = jpeg.decode(buf, { formatAsRGBA: false });
-        // console.log("decoded successfully");
-
-        // const data_tga = createTgaBuffer(width, height, rawImageData.data, true);
-        // console.log("tga created successfully");
-        //const canvas = new CanvasTGA(width, height);
-
-        //first, generate palette
-        // const SHIFTS = 4;
-
-        // const palette_set = new Set();
-        // for (let idx = 0; idx < height * width; idx++) {
-        //   let base = idx * 3;
-        //   const r = rawImageData.data[base] >> SHIFTS;
-        //   const g = rawImageData.data[base + 1] >> SHIFTS;
-        //   const b = rawImageData.data[base + 2] >> SHIFTS;
-        //   const rgb_hex = (r << 16) | (g << 8) | b;
-        //   palette_set.add(rgb_hex);
-        // }
-        // console.log("palette set created successfully, size: " + palette_set.size);
-
-        // const palette_map = {
-        //   "white": 0xffffff,
-        //   "black": 0x0,
-        // };
-        // for (const color of palette_set) {
-        //   const color_str = color.toString(16).padStart(6, "0");
-        //   palette_map[color_str] = color;
-        // }
-        // canvas.addPalette(palette_map);
-
-        // console.log("palette added successfully");
-        // console.log(JSON.stringify(palette_map));
-
-        // for (let idx = 0; idx < height * width; idx++) {
-        //   let base = idx * 3;
-        //   const r = rawImageData.data[base];
-        //   const g = rawImageData.data[base + 1];
-        //   const b = rawImageData.data[base + 2];
-        //   const color_hex = ((r >> SHIFTS) << 16) | ((g >> SHIFTS) << 8) | (b >> SHIFTS);
-        //   canvas.fillStyle = color_hex.toString(16).padStart(6, "0");
-        //   const x = idx % width;
-        //   const y = Math.floor(idx / width);
-        //   canvas.fillRect(x, y, 1, 1);
-        // }
-        // canvas.fillStyle = "white";
-        // canvas.fillRect(0, 0, 32, 32);
-
-        // console.log("buffer length: " + canvas.data.length);
-        // console.log(JSON.stringify(canvas.data.slice(0, 16)));
-
-        // const data_tga_base64 = canvas.data.toString("base64");
-        // console.log("tga base64 created successfully");
-
-        //const buf_tga = createTgaBuffer(width, height, rawImageData.data, true);
+        let buf
+        if (TARGET_FORMAT === "tga") {
+          const rawImageData = jpeg.decode(src_buf, { formatAsRGBA: false });
+          console.log("decoded successfully");
+          buf = createTgaBuffer(width, height, rawImageData.data, true);
+        } else if (TARGET_FORMAT === "png") {
+          buf = Buffer.from(src_buf);
+        }
 
         // ctx.response requires json
-        // drop down to sendHmProtocol for binary
+        // so use raw sendHmProtocol call instead
         messageBuilder.sendHmProtocol({
           requestId: ctx.request.traceId,
-          //dataBin: Buffer.from(canvas.data.buffer),
-          dataBin: Buffer.from(buf),
-          type: 0x2, //Response
+          dataBin: buf,
+          type: 0x2, //"Response"
         });
       });
 
-      // //XXX: HOPEFULLY this will work even with 1.0 api
-      // //It was added in 3.0 but... not sure if limitations also apply to side services
-      // const downloadTask = network.downloader.downloadFile({
-      //   url,
-      //   timeout: 60000
-      // });
-
-      // //TODO handle failure
-      // downloadTask.onSuccess = event => {
-      //   const file_path = event.tempFilePath ?? event.filePath;
-      //   console.log("downloaded to " + file_path);
-      //   const file_buf = fs.readFileSync(file_path);
-      //   ctx.response({
-      //     requestId: ctx.request.traceId,
-      //     data: {
-
-      //     }
-      //   });
-      // };
       break;
 
     default:
