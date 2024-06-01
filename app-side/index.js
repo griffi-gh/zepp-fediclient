@@ -1,5 +1,6 @@
 import { MessageBuilder } from "../lib/zepp/message.js";
-import { CanvasTGA } from "../lib/mmk/CanvasTGA-SERVERSIDE.js";
+// import { CanvasTGA } from "../lib/mmk/CanvasTGA-SERVERSIDE.js";
+import createTgaBuffer from "../utils/tga.js";
 import jpeg from 'jpeg-js';
 
 const messageBuilder = new MessageBuilder();
@@ -130,7 +131,7 @@ function onRequest(ctx, req_data) {
 
         // const data_tga = createTgaBuffer(width, height, rawImageData.data, true);
         // console.log("tga created successfully");
-        const canvas = new CanvasTGA(width, height);
+        //const canvas = new CanvasTGA(width, height);
 
         //first, generate palette
         // const SHIFTS = 4;
@@ -146,18 +147,18 @@ function onRequest(ctx, req_data) {
         // }
         // console.log("palette set created successfully, size: " + palette_set.size);
 
-        const palette_map = {
-          "white": 0xffffff,
-          "black": 0x0,
-        };
+        // const palette_map = {
+        //   "white": 0xffffff,
+        //   "black": 0x0,
+        // };
         // for (const color of palette_set) {
         //   const color_str = color.toString(16).padStart(6, "0");
         //   palette_map[color_str] = color;
         // }
-        canvas.addPalette(palette_map);
+        // canvas.addPalette(palette_map);
 
-        console.log("palette added successfully");
-        console.log(JSON.stringify(palette_map));
+        // console.log("palette added successfully");
+        // console.log(JSON.stringify(palette_map));
 
         // for (let idx = 0; idx < height * width; idx++) {
         //   let base = idx * 3;
@@ -170,20 +171,23 @@ function onRequest(ctx, req_data) {
         //   const y = Math.floor(idx / width);
         //   canvas.fillRect(x, y, 1, 1);
         // }
-        canvas.fillStyle = "white";
-        canvas.fillRect(0, 0, 32, 32);
+        // canvas.fillStyle = "white";
+        // canvas.fillRect(0, 0, 32, 32);
 
-        console.log("buffer length: " + canvas.data.length);
-        console.log(JSON.stringify(canvas.data.slice(0, 16)));
+        // console.log("buffer length: " + canvas.data.length);
+        // console.log(JSON.stringify(canvas.data.slice(0, 16)));
 
         // const data_tga_base64 = canvas.data.toString("base64");
         // console.log("tga base64 created successfully");
+
+        const buf_tga = createTgaBuffer(width, height, rawImageData.data, true);
 
         // ctx.response requires json
         // drop down to sendHmProtocol for binary
         messageBuilder.sendHmProtocol({
           requestId: ctx.request.traceId,
-          dataBin: Buffer.from(canvas.data.buffer),
+          //dataBin: Buffer.from(canvas.data.buffer),
+          dataBin: Buffer.from(buf_tga),
           type: 0x2, //Response
         });
       });
