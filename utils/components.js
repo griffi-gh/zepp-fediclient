@@ -73,9 +73,9 @@ export class UserHeaderComponent {
   }
 
   delete() {
-    this._img.delete();
-    this._text_username.delete();
-    this._text_acct.delete();
+    hmUI.deleteWidget(this._img);
+    hmUI.deleteWidget(this._text_username);
+    hmUI.deleteWidget(this._text_acct);
   }
 }
 
@@ -133,8 +133,8 @@ export class ReactionComponent {
   }
 
   delete() {
-    this._img.delete();
-    this._text.delete();
+    hmUI.deleteWidget(this._img);
+    hmUI.deleteWidget(this._text);
   }
 }
 
@@ -232,7 +232,7 @@ export class PostComponent {
 
   delete() {
     this.user_header_component.delete();
-    this._body.delete();
+    hmUI.deleteWidget(this._body);
     this.post_reactions_block_component.delete();
   }
 }
@@ -256,7 +256,7 @@ export class SeparatorComponent {
   }
 
   delete() {
-    this._rect.delete();
+    hmUI.deleteWidget(this._rect);
   }
 }
 
@@ -305,6 +305,6 @@ export class NoMorePostsLoadedComponent {
   }
 
   delete() {
-    this._text.delete();
+    hmUI.deleteWidget(this._text);
   }
 }
