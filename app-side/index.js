@@ -6,6 +6,8 @@ const messageBuilder = new MessageBuilder();
 
 const DEFAULT_TIMELINE = "local";
 const DEFAULT_LIMIT = 15;
+//XXX TODO change this to tga for real device!
+//    For emulator, set to "png"
 const TARGET_FORMAT = "png"; // "tga" or "png"
 
 const COMMON_HEADERS = {
