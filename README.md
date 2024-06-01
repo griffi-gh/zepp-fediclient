@@ -4,7 +4,7 @@
   FediClient
 </h1>
 <h3 align="center">
-  Open-source Mastodon client for ZeppOS
+  Open-source ActivityPub/Mastodon client for ZeppOS
 </h3>
 <h6>*Currently, only Amazfit Band 7 is officially supported, PRs welcome.</h6>
 <h2>Screenshots</h2>
