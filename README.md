@@ -1,14 +1,10 @@
-<h1>
-  <center>
-    <img src="./assets/194x368-amazfit-band-7/icon.png">
-    <br>
-    FediClient
-  </center>
+<h1 align="center">
+  <img src="./assets/194x368-amazfit-band-7/icon.png">
+  <br>
+  FediClient
 </h1>
-<h3>
-  <center>
-    Open-source Mastodon client for ZeppOS
-  </center>
+<h3 align="center">
+  Open-source Mastodon client for ZeppOS
 </h3>
 <h6>*Currently, only Amazfit Band 7 is officially supported, PRs welcome.</h6>
 <h2>Screenshots</h2>
