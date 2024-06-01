@@ -1,5 +1,6 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
+import { ensureImageCached } from '../utils/image_cache.js';
 
 const BUTTON_STYLE = {
   normal_color: 0x333333,
@@ -18,6 +19,21 @@ function gotoTimeline(timeline) {
 
 Page({
   build() {
+    ensureImageCached(
+      `https://woem.men/proxy/avatar.webp?url=https%3A%2F%2Fmisskey-taube.s3.eu-central-1.wasabisys.com%2Ffiles%2F50998b96-a57a-44df-a0a5-650fc9bf9a88.png&avatar=1`,
+      32, 32,
+      (pth) => {
+        console.log("got this: " + pth)
+        hmUI.createWidget(hmUI.widget.IMG, {
+          src: pth,
+          x: safeArea.x0,
+          y: safeArea.y0,
+          w: 32,
+          h: 32,
+        });
+      }
+    );
+
     let yy = safeArea.y0;
 
     hmUI.updateStatusBarTitle(i18n("app_name"));
