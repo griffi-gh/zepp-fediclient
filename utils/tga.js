@@ -48,7 +48,7 @@ export default function createTgaBuffer(width, height, pixels, dontFlipY) {
   }
 
   // if the image already has 256 colors or less, skip quantization
-  console.log("image has " + quick_palette.size == 257 ? ">256" : quick_palette.size + " colors");
+  console.log("image has " + quick_palette.size + " colors");
   let palette, idxOf;
   if (quick_palette.size <= 256) {
     console.log("skipping quantization");
@@ -95,7 +95,7 @@ export default function createTgaBuffer(width, height, pixels, dontFlipY) {
     const r = palette[i] ? palette[i][0] : 0;
     const g = palette[i] ? palette[i][1] : 0;
     const b = palette[i] ? palette[i][2] : 0;
-    data.push(r, g, b, 0xFF);
+    data.push(b, g, r, 0xFF);
   }
 
   let prev_idx = 999;
@@ -113,12 +113,11 @@ export default function createTgaBuffer(width, height, pixels, dontFlipY) {
         continue
       }
     }
-    data.push(0x80);
-    data.push(pixel_idx);
+    data.push(0x80, pixel_idx);
     prev_idx = pixel_idx;
   }
 
-  console.log(JSON.stringify(data));
+  //console.log(JSON.stringify(data));
 
   return new Uint8Array(data);
 }

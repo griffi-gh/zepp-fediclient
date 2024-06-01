@@ -134,14 +134,14 @@ function onRequest(ctx, req_data) {
           console.log("decoded successfully");
           buf = createTgaBuffer(width, height, rawImageData.data, true);
         } else if (TARGET_FORMAT === "png") {
-          buf = Buffer.from(src_buf);
+          buf = src_buf;
         }
 
         // ctx.response requires json
         // so use raw sendHmProtocol call instead
         messageBuilder.sendHmProtocol({
           requestId: ctx.request.traceId,
-          dataBin: buf,
+          dataBin: Buffer.from(buf),
           type: 0x2, //"Response"
         });
       });
