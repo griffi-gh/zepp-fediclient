@@ -119,15 +119,15 @@ function onRequest(ctx, req_data) {
 
       console.log("image request for " + url + " with size " + width + "x" + height);
 
-      const url_final = `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=jpg&w=${width}&h=${height}`;
+      const url_final = `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=png&w=${width}&h=${height}`;
 
       console.log("will go to " + url_final + " to download image");
 
       tryFetchSomethingAsBinary(url_final).then(buf => {
         console.log("image downloaded");
 
-        const rawImageData = jpeg.decode(buf, { formatAsRGBA: false });
-        console.log("decoded successfully");
+        // const rawImageData = jpeg.decode(buf, { formatAsRGBA: false });
+        // console.log("decoded successfully");
 
         // const data_tga = createTgaBuffer(width, height, rawImageData.data, true);
         // console.log("tga created successfully");
@@ -180,14 +180,14 @@ function onRequest(ctx, req_data) {
         // const data_tga_base64 = canvas.data.toString("base64");
         // console.log("tga base64 created successfully");
 
-        const buf_tga = createTgaBuffer(width, height, rawImageData.data, true);
+        //const buf_tga = createTgaBuffer(width, height, rawImageData.data, true);
 
         // ctx.response requires json
         // drop down to sendHmProtocol for binary
         messageBuilder.sendHmProtocol({
           requestId: ctx.request.traceId,
           //dataBin: Buffer.from(canvas.data.buffer),
-          dataBin: Buffer.from(buf_tga),
+          dataBin: Buffer.from(buf),
           type: 0x2, //Response
         });
       });
