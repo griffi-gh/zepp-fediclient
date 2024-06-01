@@ -8,7 +8,7 @@ const DEFAULT_TIMELINE = "local";
 const DEFAULT_LIMIT = 15;
 //XXX TODO change this to tga for real device!
 //    For emulator, set to "png"
-const TARGET_FORMAT = "png"; // "tga" or "png"
+const TARGET_FORMAT = "tga"; // "tga" or "png"
 
 const COMMON_HEADERS = {
   "User-Agent": "ZeppOSFediClient/1.0 (dev; prasol258_at_gmail_dot_com)",
