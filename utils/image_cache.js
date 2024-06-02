@@ -23,7 +23,8 @@ export function ensureImageCached(url, width = null, height = null, callback = _
   }
 
   //file exists? resolve immediately
-  if (hmFS.stat_asset(path) === 0) {
+  const [_, err] = hmFS.stat_asset(path);
+  if (err === 0) {
     console.log("file exists, resolving immediately")
     callback(path);
     return;
