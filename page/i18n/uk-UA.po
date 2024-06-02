@@ -4,6 +4,9 @@ msgstr "FediClient"
 msgid "loading"
 msgstr "Завантаження..."
 
+msgid "post"
+msgstr "Допис"
+
 msgid "timeline_title"
 msgstr "Стрічка"
 

@@ -26,7 +26,8 @@
         "page": {
           "pages": [
             "page/index",
-            "page/timeline"
+            "page/timeline",
+            "page/post"
           ]
         },
         "app-side": {

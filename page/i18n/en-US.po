@@ -4,6 +4,9 @@ msgstr "FediClient"
 msgid "loading"
 msgstr "Loading..."
 
+msgid "post"
+msgstr "Post"
+
 msgid "timeline_title"
 msgstr "Timeline"
 

@@ -1,9 +1,11 @@
 import "./lib/zepp/device-polyfill.js";
 import { MessageBuilder } from "./lib/zepp/message.js";
+import { registerBackHandler } from "./utils/navigation.js";
 
 App({
   globalData: {
-    messageBuilder: null
+    messageBuilder: null,
+    preserveData: null,
   },
   onCreate(options) {
     console.log('app on create invoke');
@@ -15,6 +17,12 @@ App({
 
     this.globalData.messageBuilder = new MessageBuilder({ appId });
     this.globalData.messageBuilder.connect();
+
+    this.globalData.preserveData = {
+      data: null,
+      stack: [],
+    };
+    registerBackHandler();
   },
   onDestroy(options) {
     console.log('app on destroy invoke');

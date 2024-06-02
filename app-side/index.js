@@ -17,7 +17,7 @@ const COMMON_HEADERS = {
 
 //TODO: move to settings
 //for now, i just picked a cute random instance :p
-const FEDI_DOMAIN = "https://woem.men";
+const FEDI_DOMAIN = "woem.men";
 
 async function fetchSomething(url) {
   console.log("fetch " + url);
@@ -51,16 +51,7 @@ async function tryFetchSomethingAsBinary(url) {
 }
 
 
-async function fetchTimelineRaw(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT) {
-  const [actual_timeline, query] = {
-    "public": ["public", ""],
-    "local": ["public", "&local=true"],
-    "home": ["home", ""], //requires auth
-  }[timeline] ?? [timeline, ""];
-  console.log("fetching " + actual_timeline + " timeline... with limit " + limit + " and etc. query " + query);
-  return await fetchSomething(`${FEDI_DOMAIN}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
-}
-
+//maps Mastodon Status object to our internal post object
 function transPost(post) {
   return {
     id: post.id,
@@ -84,9 +75,38 @@ function transPost(post) {
 }
 
 async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT) {
-  const posts_raw = await fetchTimelineRaw(timeline, limit);
+  const [actual_timeline, query] = {
+    "public": ["public", ""],
+    "local": ["public", "&local=true"],
+    "home": ["home", ""], //requires auth
+  }[timeline] ?? [timeline, ""];
+  console.log("fetching " + actual_timeline + " timeline... with limit " + limit + " and etc. query " + query);
+  const posts_raw = await fetchSomething(`https://${FEDI_DOMAIN}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
   console.log(JSON.stringify(posts_raw));
   return posts_raw.map(transPost);
+}
+
+async function fetchPost(post_id, andDescendants = false) {
+  console.log("fetching post id " + post_id + " with descendants: " + andDescendants);
+
+
+  const post_status_url = `https://${FEDI_DOMAIN}/api/v1/statuses/${post_id}`;
+  console.log("fetching post from " + post_status_url);
+  const post_raw = await fetchSomething(post_status_url);
+  console.log("post_raw: " + JSON.stringify(post_raw));
+  const post = transPost(post_raw);
+
+  let descendants = null;
+  if (andDescendants) {
+    const context_url = `https://${FEDI_DOMAIN}/api/v1/statuses/${post_id}/context`;
+    console.log("fetching context from " + context_url);
+    const context_raw = await fetchSomething(context_url);
+    console.log("context_raw: " + JSON.stringify(context_raw));
+    descendants = context_raw.descendants.map(transPost);
+    //TODO do sth with ancestors?
+  }
+
+  return { post, descendants };
 }
 
 function onRequest(ctx, req_data) {
@@ -107,6 +127,21 @@ function onRequest(ctx, req_data) {
 
       console.log(`fetching up to ${limit} posts from "${timeline}" timeline...`);
       fetchTimeline(timeline).then(res_data => {
+        console.log("Done (trace request id: " + ctx.request.traceId + ")");
+        console.log(JSON.stringify(res_data));
+        ctx.response({
+          requestId: ctx.request.traceId,
+          data: res_data,
+        });
+      });
+      break;
+
+    case "fetchPost":
+      const { id, andDescendants } = req_data;
+
+      console.log("request for post id " + id + " with descendants: " + andDescendants);
+
+      fetchPost(id, andDescendants).then(res_data => {
         console.log("Done (trace request id: " + ctx.request.traceId + ")");
         console.log(JSON.stringify(res_data));
         ctx.response({

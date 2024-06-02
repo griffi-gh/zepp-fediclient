@@ -1,19 +1,11 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
+import { gotoTimeline } from '../utils/navigation.js';
 
 const BUTTON_STYLE = {
   normal_color: 0x333333,
   press_color: 0x666666,
   radius: 8,
-}
-
-function gotoTimeline(timeline) {
-  hmApp.gotoPage({
-    url: "page/timeline",
-    param: JSON.stringify({
-      goto_timeline: timeline,
-    }),
-  });
 }
 
 Page({

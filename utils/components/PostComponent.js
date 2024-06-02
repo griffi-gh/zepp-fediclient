@@ -1,4 +1,5 @@
-import { textSize, wrapText } from './../util.js';
+import { textSize, wrapText } from '../util.js';
+import { gotoPost } from '../navigation.js';
 import ReblogUserHeaderComponent from "./ReblogUserHeaderComponent.js";
 import UserHeaderComponent from "./UserHeaderComponent.js";
 import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
@@ -13,8 +14,9 @@ import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
 // [post_content]
 // [react_block]
 export default class PostComponent {
-  constructor(post) {
+  constructor(post, on_click_go_to_post_page = false) {
     this.post = post;
+    this.on_click_go_to_post_page = !!on_click_go_to_post_page;
 
     if (post.reblog) {
       this.reblog_user_header_component = new ReblogUserHeaderComponent(
@@ -67,17 +69,32 @@ export default class PostComponent {
       align_h: hmUI.align.LEFT,
       text_style: hmUI.text_style.ELLIPSIS,
     });
+    if (this.on_click_go_to_post_page) {
+      this._postClickCb = this.postClick.bind(this);
+      this._body.addEventListener(hmUI.event.CLICK_UP, this._postClickCb);
+    }
     man.account(0, sz);
 
     //REACT BLOCK
     this.post_reactions_block_component.layout(man);
   }
 
+  postClick() {
+    if (this._deleted) return;
+    console.log("PostComponent.postClick");
+    const target_post = this.post.reblog ?? this.post;
+    gotoPost(target_post.id);
+  }
+
   delete() {
+    this._deleted = true;
     if (this.reblog_user_header_component) {
       this.reblog_user_header_component.delete();
     }
     this.user_header_component.delete();
+    if (this.on_click_go_to_post_page) {
+      this._body.removeEventListener(hmUI.event.CLICK_UP, this._postClickCb);
+    }
     hmUI.deleteWidget(this._body);
     this.post_reactions_block_component.delete();
   }
