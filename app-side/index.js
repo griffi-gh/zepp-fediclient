@@ -61,25 +61,32 @@ async function fetchTimelineRaw(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIM
   return await fetchSomething(`${FEDI_DOMAIN}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
 }
 
+function transPost(post) {
+  return {
+    id: post.id,
+
+    profile_pic: post.account.avatar ?? null,
+    username: post.account.display_name ??
+              post.account.username ??
+              post.account.acct,
+    acct: post.account.acct,
+
+    content: post.text ?? post.content ?? null,
+
+    likes: post.favourites_count,
+    like_active: post.favourited,
+    reblogs: post.reblogs_count,
+    reblog_active: post.reblogged,
+    replies: post.replies_count,
+
+    reblog: post.reblog ? transPost(post.reblog) : null,
+  };
+}
+
 async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT) {
   const posts_raw = await fetchTimelineRaw(timeline, limit);
   console.log(JSON.stringify(posts_raw));
-  const posts = [];
-  for (const post of posts_raw) {
-    posts.push({
-      profile_pic: post.account.avatar ?? null,
-      username: post.account.display_name ?? post.account.username,
-      acct: post.account.acct,
-      id: post.id,
-      content: post.text ?? post.content ?? "",
-      likes: post.favourites_count,
-      like_active: post.favourited,
-      reblogs: post.reblogs_count,
-      reblog_active: post.reblogged,
-      replies: post.replies_count,
-    });
-  }
-  return posts;
+  return posts_raw.map(transPost);
 }
 
 function onRequest(ctx, req_data) {

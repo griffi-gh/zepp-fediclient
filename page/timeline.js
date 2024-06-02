@@ -1,10 +1,8 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
-import {
-  PostFeedComponent,
-  NoMorePostsLoadedComponent,
-} from '../utils/components.js';
+import PostFeedComponent from '../utils/components/PostFeedComponent.js';
+import NoMorePostsLoadedComponent from '../utils/components/NoMorePostsLoadedComponent.js';
 
 const { messageBuilder } = getApp()._options.globalData;
 
