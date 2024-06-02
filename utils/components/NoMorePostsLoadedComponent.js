@@ -1,3 +1,5 @@
+import { gettext as i18n } from 'i18n';
+
 export default class NoMorePostsLoadedComponent {
   constructor() {}
 
