@@ -3,6 +3,10 @@ import ReblogUserHeaderComponent from "./ReblogUserHeaderComponent.js";
 import UserHeaderComponent from "./UserHeaderComponent.js";
 import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
 
+//TODO support quoted posts
+//Are those just reblogs with content attached?
+//XXX: check how masto/sharkey do it
+
 // Post component, looks like:
 // ([reblog_user_header]) if reblog
 // [user_header]

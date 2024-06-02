@@ -1,8 +1,6 @@
 import { ensureImageCached } from './../../utils/image_cache.js';
 
-//TODO support quoted posts
-//Are those just reblogs with content attached?
-//XXX: check how masto/sharkey do it
+//TODO image lazy loading
 
 export default class InternetImageComponent {
   constructor(src, width, height) {
