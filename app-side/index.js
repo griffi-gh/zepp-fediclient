@@ -104,14 +104,9 @@ function onRequest(ctx, req_data) {
     case "fetchTimeline":
       const timeline = req_data.timeline ?? DEFAULT_TIMELINE;
       const limit = req_data.limit ?? DEFAULT_LIMIT;
-      const filter_empty = !!req_data.filter_empty; // experimental
 
-      console.log(`fetching up to ${limit} posts from "${timeline}" timeline ${filter_empty ? "with" : "without"} filtering...`);
-
+      console.log(`fetching up to ${limit} posts from "${timeline}" timeline...`);
       fetchTimeline(timeline).then(res_data => {
-        if (filter_empty) {
-          res_data = res_data.filter(post => post.content.length > 0);
-        }
         console.log("Done (trace request id: " + ctx.request.traceId + ")");
         console.log(JSON.stringify(res_data));
         ctx.response({
@@ -152,7 +147,6 @@ function onRequest(ctx, req_data) {
           type: 0x2, //"Response"
         });
       });
-
       break;
 
     default:
