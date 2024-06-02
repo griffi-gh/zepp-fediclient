@@ -1,5 +1,6 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
+import { callMeOnScreenInit } from '../utils/navigation.js';
 import { LayoutManager } from '../utils/layout.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
 import NoMorePostsLoadedComponent from '../utils/components/NoMorePostsLoadedComponent.js';
@@ -32,6 +33,7 @@ function on_post_data_ready(data) {
 
 Page({
   onInit(param) {
+    callMeOnScreenInit();
     lifecycle = true;
 
     if (param) {

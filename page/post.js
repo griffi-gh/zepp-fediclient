@@ -1,6 +1,7 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
+import { callMeOnScreenInit } from '../utils/navigation.js';
 import PostComponent from '../utils/components/PostComponent.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
 import SeparatorComponent from '../utils/components/SeparatorComponent.js';
@@ -36,6 +37,7 @@ function on_post_loaded(data) {
 
 Page({
   onInit(param) {
+    callMeOnScreenInit();
     lifecycle = true;
     if (!param) {
       throw new Error("param is required");

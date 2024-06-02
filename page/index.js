@@ -1,6 +1,6 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
-import { gotoTimeline } from '../utils/navigation.js';
+import { gotoTimeline, callMeOnScreenInit } from '../utils/navigation.js';
 
 const BUTTON_STYLE = {
   normal_color: 0x333333,
@@ -9,6 +9,9 @@ const BUTTON_STYLE = {
 }
 
 Page({
+  onInit(param) {
+    callMeOnScreenInit();
+  },
   build() {
     let yy = safeArea.y0;
 
