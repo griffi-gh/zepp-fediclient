@@ -8,7 +8,7 @@
       "code": 1,
       "name": "1.0.1"
     },
-    "icon": "icon.png",
+    "icon": "icon96.png",
     "vender": "griffi-gh",
     "description": "Open-source fediverse client for ZeppOS"
   },
