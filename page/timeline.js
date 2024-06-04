@@ -1,3 +1,4 @@
+import { RESTORE_STUFF_ONDEVICE } from '../configuration.js';
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { callMeOnScreenInit } from '../utils/navigation.js';
@@ -17,7 +18,9 @@ let lifecycle = false;
 function on_post_data_ready(data) {
   if (!lifecycle) return;
 
-  preserveData.data = data;
+  if (RESTORE_STUFF_ONDEVICE) {
+    preserveData.data = data;
+  }
 
   const timeline_title = i18n("timeline_" + currentTimeline);
   hmUI.updateStatusBarTitle(timeline_title);
@@ -46,7 +49,7 @@ Page({
 
   build() {
     hmUI.setLayerScrolling(true);
-    if (preserveData.data) {
+    if (RESTORE_STUFF_ONDEVICE && preserveData.data) {
       console.log("restoring state");
       on_post_data_ready(preserveData.data);
     } else {

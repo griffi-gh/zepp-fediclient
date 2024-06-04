@@ -1,3 +1,4 @@
+import { RESTORE_STUFF_ONDEVICE } from '../configuration.js';
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
@@ -20,7 +21,9 @@ let lifecycle = false;
 function on_post_loaded(data) {
   if (!lifecycle) return;
 
-  preserveData.data = data;
+  if (RESTORE_STUFF_ONDEVICE) {
+    preserveData.data = data;
+  }
 
   hmUI.updateStatusBarTitle(i18n("post"));
 
@@ -48,7 +51,7 @@ Page({
   build() {
     hmUI.setLayerScrolling(true);
 
-    if (preserveData.data) {
+    if (RESTORE_STUFF_ONDEVICE && preserveData.data) {
       console.log("restoring state");
       on_post_loaded(preserveData.data);
     } else {
