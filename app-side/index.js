@@ -1,3 +1,8 @@
+import {
+  INSTANCE_DOMAIN,
+  INTERNET_IMAGE_MODE,
+  POST_LIMIT_PER_PAGE,
+} from "../configuration.js";
 import { MessageBuilder } from "../lib/zepp/message.js";
 import createTgaBuffer from "../utils/tga.js";
 import jpeg from 'jpeg-js';
@@ -5,19 +10,11 @@ import jpeg from 'jpeg-js';
 const messageBuilder = new MessageBuilder();
 
 const DEFAULT_TIMELINE = "local";
-const DEFAULT_LIMIT = 15;
-//XXX TODO change this to tga for real device!
-//    For emulator, set to "png"
-const TARGET_FORMAT = "png"; // "tga" or "png"
 
 const COMMON_HEADERS = {
   "User-Agent": "ZeppOSFediClient/1.0 (dev; prasol258_at_gmail_dot_com)",
   "X-Client": "ZeppOSFediClient",
 };
-
-//TODO: move to settings
-//for now, i just picked a cute random instance :p
-const FEDI_DOMAIN = "woem.men";
 
 async function fetchSomething(url) {
   console.log("fetch " + url);
@@ -74,14 +71,14 @@ function transPost(post) {
   };
 }
 
-async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = DEFAULT_LIMIT) {
+async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = POST_LIMIT_PER_PAGE) {
   const [actual_timeline, query] = {
     "public": ["public", ""],
     "local": ["public", "&local=true"],
     "home": ["home", ""], //requires auth
   }[timeline] ?? [timeline, ""];
   console.log("fetching " + actual_timeline + " timeline... with limit " + limit + " and etc. query " + query);
-  const posts_raw = await fetchSomething(`https://${FEDI_DOMAIN}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
+  const posts_raw = await fetchSomething(`https://${INSTANCE_DOMAIN}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
   console.log(JSON.stringify(posts_raw));
   return posts_raw.map(transPost);
 }
@@ -90,7 +87,7 @@ async function fetchPost(post_id, andDescendants = false) {
   console.log("fetching post id " + post_id + " with descendants: " + andDescendants);
 
 
-  const post_status_url = `https://${FEDI_DOMAIN}/api/v1/statuses/${post_id}`;
+  const post_status_url = `https://${INSTANCE_DOMAIN}/api/v1/statuses/${post_id}`;
   console.log("fetching post from " + post_status_url);
   const post_raw = await fetchSomething(post_status_url);
   console.log("post_raw: " + JSON.stringify(post_raw));
@@ -98,7 +95,7 @@ async function fetchPost(post_id, andDescendants = false) {
 
   let descendants = null;
   if (andDescendants) {
-    const context_url = `https://${FEDI_DOMAIN}/api/v1/statuses/${post_id}/context`;
+    const context_url = `https://${INSTANCE_DOMAIN}/api/v1/statuses/${post_id}/context`;
     console.log("fetching context from " + context_url);
     const context_raw = await fetchSomething(context_url);
     console.log("context_raw: " + JSON.stringify(context_raw));
@@ -123,7 +120,7 @@ function onRequest(ctx, req_data) {
 
     case "fetchTimeline":
       const timeline = req_data.timeline ?? DEFAULT_TIMELINE;
-      const limit = req_data.limit ?? DEFAULT_LIMIT;
+      const limit = req_data.limit ?? POST_LIMIT_PER_PAGE;
 
       console.log(`fetching up to ${limit} posts from "${timeline}" timeline...`);
       fetchTimeline(timeline).then(res_data => {
@@ -157,7 +154,7 @@ function onRequest(ctx, req_data) {
       console.log("image request for " + url + " with size " + width + "x" + height);
 
       const url_encoded = encodeURIComponent(url);
-      const desired_format = TARGET_FORMAT === "tga" ? "jpg" : "png";
+      const desired_format = INTERNET_IMAGE_MODE === "tga" ? "jpg" : "png";
       const url_final = `https://wsrv.nl/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`;
 
       console.log("will go to " + url_final + " to download image");
@@ -166,11 +163,11 @@ function onRequest(ctx, req_data) {
         console.log("image downloaded");
 
         let buf
-        if (TARGET_FORMAT === "tga") {
+        if (INTERNET_IMAGE_MODE === "tga") {
           const rawImageData = jpeg.decode(src_buf, { formatAsRGBA: false });
           console.log("decoded successfully");
           buf = createTgaBuffer(width, height, rawImageData.data, true);
-        } else if (TARGET_FORMAT === "png") {
+        } else if (INTERNET_IMAGE_MODE === "png") {
           buf = src_buf;
         }
 
