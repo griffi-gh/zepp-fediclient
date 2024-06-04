@@ -1,4 +1,3 @@
-import { RESTORE_STUFF_ONDEVICE } from '../configuration.js';
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { callMeOnScreenInit } from '../utils/navigation.js';
@@ -6,7 +5,7 @@ import { LayoutManager } from '../utils/layout.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
 import NoMorePostsLoadedComponent from '../utils/components/NoMorePostsLoadedComponent.js';
 
-const { messageBuilder, preserveData } = getApp()._options.globalData;
+const { messageBuilder } = getApp()._options.globalData;
 
 let currentTimeline = "local";
 
@@ -17,10 +16,6 @@ let lifecycle = false;
 
 function on_post_data_ready(data) {
   if (!lifecycle) return;
-
-  if (RESTORE_STUFF_ONDEVICE) {
-    preserveData.data = data;
-  }
 
   const timeline_title = i18n("timeline_" + currentTimeline);
   hmUI.updateStatusBarTitle(timeline_title);
@@ -49,18 +44,13 @@ Page({
 
   build() {
     hmUI.setLayerScrolling(true);
-    if (RESTORE_STUFF_ONDEVICE && preserveData.data) {
-      console.log("restoring state");
-      on_post_data_ready(preserveData.data);
-    } else {
       hmUI.updateStatusBarTitle(i18n("loading"));
       messageBuilder
         .request({
           request: "fetchTimeline",
           timeline: currentTimeline,
         })
-        .then(data => on_post_data_ready(data));
-    }
+        .then(on_post_data_ready);
   },
 
   onDestroy() {

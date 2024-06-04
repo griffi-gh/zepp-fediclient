@@ -1,4 +1,3 @@
-import { RESTORE_STUFF_ONDEVICE } from '../configuration.js';
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
@@ -8,7 +7,7 @@ import PostFeedComponent from '../utils/components/PostFeedComponent.js';
 import SeparatorComponent from '../utils/components/SeparatorComponent.js';
 //import NoMorePostsLoadedComponent from '../utils/components/NoMorePostsLoadedComponent.js';
 
-const { messageBuilder, preserveData } = getApp()._options.globalData;
+const { messageBuilder } = getApp()._options.globalData;
 
 let currentPostId;
 
@@ -20,10 +19,6 @@ let lifecycle = false;
 
 function on_post_loaded(data) {
   if (!lifecycle) return;
-
-  if (RESTORE_STUFF_ONDEVICE) {
-    preserveData.data = data;
-  }
 
   hmUI.updateStatusBarTitle(i18n("post"));
 
@@ -51,20 +46,15 @@ Page({
   build() {
     hmUI.setLayerScrolling(true);
 
-    if (RESTORE_STUFF_ONDEVICE && preserveData.data) {
-      console.log("restoring state");
-      on_post_loaded(preserveData.data);
-    } else {
-      console.log("fetching post id " + currentPostId);
-      hmUI.updateStatusBarTitle(i18n("loading"));
-      messageBuilder
-        .request({
-          request: "fetchPost",
-          id: currentPostId,
-          andDescendants: true,
-        })
-        .then(data => on_post_loaded(data));
-    }
+    console.log("fetching post id " + currentPostId);
+    hmUI.updateStatusBarTitle(i18n("loading"));
+    messageBuilder
+      .request({
+        request: "fetchPost",
+        id: currentPostId,
+        andDescendants: true,
+      })
+      .then(on_post_loaded);
   },
   onDestroy() {
     lifecycle = false;
