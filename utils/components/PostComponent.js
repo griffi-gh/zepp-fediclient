@@ -1,5 +1,6 @@
 import { textSize, wrapText } from '../util.js';
 import { gotoPost } from '../navigation.js';
+import FullClickHelper from '../full_click.js';
 import ReblogUserHeaderComponent from "./ReblogUserHeaderComponent.js";
 import UserHeaderComponent from "./UserHeaderComponent.js";
 import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
@@ -70,8 +71,12 @@ export default class PostComponent {
       text_style: hmUI.text_style.ELLIPSIS,
     });
     if (this.on_click_go_to_post_page) {
-      this._postClickCb = this.postClick.bind(this);
-      this._body.addEventListener(hmUI.event.CLICK_UP, this._postClickCb);
+      this._click_helper = new FullClickHelper(
+        this._body,
+        this.postClick.bind(this)
+      );
+      this._click_helper.attach();
+      // this._body.addEventListener(hmUI.event.CLICK_UP, this._postClickCb);
     }
     man.account(0, sz);
 
@@ -82,6 +87,7 @@ export default class PostComponent {
   postClick(meta) {
     if (this._deleted) return;
     console.log("PostComponent.postClick");
+    console.log(JSON.stringify(meta));
     const target_post = this.post.reblog ?? this.post;
     gotoPost(target_post.id);
   }
@@ -93,7 +99,8 @@ export default class PostComponent {
     }
     this.user_header_component.delete();
     if (this.on_click_go_to_post_page) {
-      this._body.removeEventListener(hmUI.event.CLICK_UP, this._postClickCb);
+      //this._body.removeEventListener(hmUI.event.CLICK_UP, this._postClickCb);
+      this._click_helper.detach();
     }
     hmUI.deleteWidget(this._body);
     this.post_reactions_block_component.delete();
