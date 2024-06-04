@@ -2,6 +2,7 @@ import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
 import { callMeOnScreenInit } from '../utils/navigation.js';
+import LoadingAnimationComponent from '../utils/components/LoadingAnimationComponent.js';
 import PostComponent from '../utils/components/PostComponent.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
 import SeparatorComponent from '../utils/components/SeparatorComponent.js';
@@ -11,7 +12,8 @@ const { messageBuilder } = getApp()._options.globalData;
 
 let currentPostId;
 
-let post_component,
+let loading_component,
+    post_component,
     separator_component,
     post_feed_component;
 
@@ -20,7 +22,7 @@ let lifecycle = false;
 function on_post_loaded(data) {
   if (!lifecycle) return;
 
-  hmUI.updateStatusBarTitle(i18n("post"));
+  loading_component.delete();
 
   const man = new LayoutManager(safeArea);
 
@@ -44,10 +46,16 @@ Page({
     currentPostId = goto_post;
   },
   build() {
+    hmUI.updateStatusBarTitle(i18n("post"));
     hmUI.setLayerScrolling(true);
 
+    loading_component = new LoadingAnimationComponent();
+    loading_component.layout({
+      x: (safeArea.w - 48) / 2,
+      y: (safeArea.h - 48) / 2,
+    });
+
     console.log("fetching post id " + currentPostId);
-    hmUI.updateStatusBarTitle(i18n("loading"));
     messageBuilder
       .request({
         request: "fetchPost",

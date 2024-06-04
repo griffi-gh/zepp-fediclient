@@ -4,12 +4,14 @@ import { callMeOnScreenInit } from '../utils/navigation.js';
 import { LayoutManager } from '../utils/layout.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
 import NoMorePostsLoadedComponent from '../utils/components/NoMorePostsLoadedComponent.js';
+import LoadingAnimationComponent from '../utils/components/LoadingAnimationComponent.js';
 
 const { messageBuilder } = getApp()._options.globalData;
 
 let currentTimeline = "local";
 
-let post_feed_component,
+let loading_component,
+    post_feed_component,
     no_more_posts_loaded_component;
 
 let lifecycle = false;
@@ -17,8 +19,7 @@ let lifecycle = false;
 function on_post_data_ready(data) {
   if (!lifecycle) return;
 
-  const timeline_title = i18n("timeline_" + currentTimeline);
-  hmUI.updateStatusBarTitle(timeline_title);
+  loading_component.delete();
 
   const man = new LayoutManager(safeArea);
 
@@ -43,14 +44,22 @@ Page({
   },
 
   build() {
+    const timeline_title = i18n("timeline_" + currentTimeline);
+    hmUI.updateStatusBarTitle(timeline_title);
     hmUI.setLayerScrolling(true);
-      hmUI.updateStatusBarTitle(i18n("loading"));
-      messageBuilder
-        .request({
-          request: "fetchTimeline",
-          timeline: currentTimeline,
-        })
-        .then(on_post_data_ready);
+
+    loading_component = new LoadingAnimationComponent();
+    loading_component.layout({
+      x: (safeArea.w - 48) / 2,
+      y: (safeArea.h - 48) / 2,
+    });
+
+    messageBuilder
+      .request({
+        request: "fetchTimeline",
+        timeline: currentTimeline,
+      })
+      .then(on_post_data_ready);
   },
 
   onDestroy() {

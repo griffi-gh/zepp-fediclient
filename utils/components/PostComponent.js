@@ -79,7 +79,7 @@ export default class PostComponent {
     this.post_reactions_block_component.layout(man);
   }
 
-  postClick() {
+  postClick(meta) {
     if (this._deleted) return;
     console.log("PostComponent.postClick");
     const target_post = this.post.reblog ?? this.post;
