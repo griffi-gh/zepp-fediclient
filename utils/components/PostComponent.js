@@ -15,9 +15,9 @@ import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
 // [post_content]
 // [react_block]
 export default class PostComponent {
-  constructor(post, on_click_go_to_post_page = false) {
+  constructor(post, body_clickable = false) {
     this.post = post;
-    this.on_click_go_to_post_page = !!on_click_go_to_post_page;
+    this.on_click_go_to_post_page = !!body_clickable;
 
     if (post.reblog) {
       this.reblog_user_header_component = new ReblogUserHeaderComponent(
