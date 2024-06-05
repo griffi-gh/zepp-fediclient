@@ -2,6 +2,7 @@ import {
   INSTANCE_DOMAIN,
   INTERNET_IMAGE_MODE,
   POST_LIMIT_PER_PAGE,
+  TGA_USE_RLE,
 } from "../configuration.js";
 import { MessageBuilder } from "../lib/zepp/message.js";
 import createTgaBuffer from "../utils/tga.js";
@@ -166,7 +167,7 @@ function onRequest(ctx, req_data) {
         if (INTERNET_IMAGE_MODE === "tga") {
           const rawImageData = jpeg.decode(src_buf, { formatAsRGBA: false });
           console.log("decoded successfully");
-          buf = createTgaBuffer(width, height, rawImageData.data, true);
+          buf = createTgaBuffer(width, height, rawImageData.data, TGA_USE_RLE);
         } else if (INTERNET_IMAGE_MODE === "png") {
           buf = src_buf;
         }

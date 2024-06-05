@@ -1,14 +1,24 @@
 import quantize from "quantize";
 
-export default function createTgaBuffer(width, height, pixels, dontFlipY) {
+//Create an uncompressed tga buffer from a given RGB pixel array
+//Supposed to work identically to PNG2TGA for Amazfit Band 7 :3 (RLE didnt work as expected :c)
+//DOES NOT support transparency
+
+export default function createTgaBuffer(width, height, pixels, useRLE = false) {
   console.log('createTgaBuffer');
 
+  const dtype = useRLE ? 0x09 : 0x01;
+  const wdtha = width & 0xFF;
+  const wdthb = width >> 8;
+  const hghta = height & 0xFF;
+  const hghtb = height >> 8;
+
   const data = [
-    0x2e, 0x01, 0x09, 0x00,
+    0x2e, 0x01, dtype, 0x00,
     0x00, 0x00, 0x01, 0x20,
 
     0x00, 0x00, 0x00, 0x00,
-    width & 0xFF, width >> 8, height & 0xFF, height >> 8,
+    wdtha, wdthb, hghta, hghtb,
 
     0x08, 0x20, 0x53, 0x4f,
     0x4d, 0x48, 0x18, 0x00,
@@ -48,9 +58,9 @@ export default function createTgaBuffer(width, height, pixels, dontFlipY) {
   }
 
   // if the image already has 256 colors or less, skip quantization
-  console.log("image has " + quick_palette.size + " colors");
   let palette, idxOf;
   if (quick_palette.size <= 256) {
+    console.log("image has " + quick_palette.size + " colors");
     console.log("skipping quantization");
     palette = [];
     for (const key of quick_palette) {
@@ -72,7 +82,7 @@ export default function createTgaBuffer(width, height, pixels, dontFlipY) {
       throw new Error("unreachable");
     };
   } else {
-    console.log("quantizing :(");
+    console.log("too many colors, quantizing :(");
     // quantize the image to 256 colors
     const cmap = quantize(pixels_arr, 256);
     palette = cmap.palette();
@@ -98,23 +108,26 @@ export default function createTgaBuffer(width, height, pixels, dontFlipY) {
     data.push(b, g, r, 0xFF);
   }
 
-  let prev_idx = 999;
+  let rle_prev_idx = 999;
   for (let i = 0; i < width * height; i++) {
-    //"rle" my ass
     const base = i * 3;
     const r = pixels[base];
     const g = pixels[base + 1];
     const b = pixels[base + 2];
     const pixel_idx = idxOf([r, g, b]);
-    if (prev_idx == pixel_idx) {
-      const cur_ctr = data[data.length - 2];
-      if (cur_ctr != 0xff) {
-        data[data.length - 2] += 1;
-        continue
+    if (!useRLE) {
+      data.push(pixel_idx);
+    } else {
+      if (rle_prev_idx == pixel_idx) {
+        const cur_ctr = data[data.length - 2];
+        if (cur_ctr != 0xff) {
+          data[data.length - 2] += 1;
+          continue
+        }
       }
+      data.push(0x80, pixel_idx);
+      rle_prev_idx = pixel_idx;
     }
-    data.push(0x80, pixel_idx);
-    prev_idx = pixel_idx;
   }
 
   //console.log(JSON.stringify(data));

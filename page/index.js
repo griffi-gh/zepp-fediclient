@@ -2,6 +2,9 @@ import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { gotoTimeline, callMeOnScreenInit } from '../utils/navigation.js';
 
+import InternetImageComponent from '../utils/components/InternetImageComponent.js';
+import { LayoutManager } from '../utils/layout.js';
+
 const BUTTON_STYLE = {
   normal_color: 0x333333,
   press_color: 0x666666,
@@ -13,6 +16,12 @@ Page({
     callMeOnScreenInit();
   },
   build() {
+    {
+      const man = new LayoutManager();
+      const img = new InternetImageComponent("https://woem.men/files/780c2764-fb28-4d80-91b0-cd8008b5ebc9", 32, 32);
+      img.layout(man);
+    }
+
     let yy = safeArea.y0;
 
     hmUI.updateStatusBarTitle(i18n("app_name"));
