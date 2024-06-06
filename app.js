@@ -23,6 +23,8 @@ App({
       stack: [],
     };
     registerBackHandler();
+
+    this.globalData.transitioning = false;
   },
   onDestroy(options) {
     console.log('app on destroy invoke');
