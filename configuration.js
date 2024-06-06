@@ -3,8 +3,17 @@
 // "real" - for running on a real device
 export const DEPLOYMENT_TYPE = "real";
 
-// domain of the mastodon instance
+// domain of the mastodon instance to be used by default
+// (this is just the default and can be changed in the settings)
 export const INSTANCE_DOMAIN = "woem.men";
+
+// Metadata of the OAuth application
+export const CLIENT_META = {
+  client_name: "ZeppOSFediClient",
+  redirect_uris: "http://zepp-os.zepp.com/app-settings/redirect.html",
+  scopes: "read write follow",
+  website: "https://github.com/griffi-gh/zepp-fediclient"
+};
 
 // experimental:
 // allow use of cached internet images (e.g. for profile pictures);

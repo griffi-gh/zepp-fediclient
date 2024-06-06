@@ -3,6 +3,7 @@ import {
   INTERNET_IMAGE_MODE,
   POST_LIMIT_PER_PAGE,
   TGA_USE_RLE,
+  CLIENT_META,
 } from "../configuration.js";
 import { MessageBuilder } from "../lib/zepp/message.js";
 import createTgaBuffer from "../utils/tga.js";
@@ -17,21 +18,39 @@ const COMMON_HEADERS = {
   "X-Client": "ZeppOSFediClient",
 };
 
-async function fetchSomething(url) {
-  console.log("fetch " + url);
-  const res = await fetch({
-    url,
-    method: 'GET',
-    headers: {
-      "Accept": "application/json",
-      ...COMMON_HEADERS,
-    }
-  });
-  const resBody =
+function resJson(res) {
+  return (
     typeof res.body === 'string' ?
     JSON.parse(res.body) :
-    res.body;
-  return resBody;
+    res.body
+  );
+}
+
+async function fetchSomething(url, method = 'GET', body = null, auth = true) {
+  console.log("fetch " + url);
+
+  let auth_header;
+  if (auth) {
+    let access_token = settings.settingsStorage.getItem("access_token");
+    if (access_token) {
+      access_token = JSON.parse(access_token);
+      auth_header = (access_token.token_type ?? "Bearer") + " " + access_token.access_token;
+    }
+  }
+  console.log("AUTH: " + auth_header);
+
+  const res = await fetch({
+    url,
+    method: method,
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": body ? "application/json" : undefined,
+      "Authorization": auth ? auth_header : undefined,
+      ...COMMON_HEADERS,
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  return resJson(res);
 }
 
 //This may not work at all
@@ -196,6 +215,45 @@ AppSideService({
       const data = messageBuilder.buf2Json(ctx.request.payload);
       onRequest(ctx, data);
     });
+
+    settings.settingsStorage.addListener('change', async ({ key, newValue, oldValue }) => {
+      if (key === "_reqest_appid" && newValue === "1") {
+        console.log("request for app id");
+        const res = resJson(await fetch({
+          url: `https://${INSTANCE_DOMAIN}/api/v1/apps`,
+          method: 'POST',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            ...COMMON_HEADERS,
+          },
+          body: JSON.stringify(CLIENT_META),
+        }));
+        console.log("app response: " + JSON.stringify(res));
+        settings.settingsStorage.setItem("oauth_app", JSON.stringify(res));
+      } else if (key === "_request_revoke" && newValue === "1") {
+        console.log("revoking access token");
+        const { access_token } = JSON.parse(settings.settingsStorage.getItem("access_token"));
+        const { client_id, client_secret } = JSON.parse(settings.settingsStorage.getItem("oauth_app"));
+        //This only works on Mastodon, not Sharkey :p
+        const res = resJson(await fetch({
+          url: `https://${INSTANCE_DOMAIN}/oauth/revoke`,
+          method: 'POST',
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            ...COMMON_HEADERS,
+          },
+          body: JSON.stringify({
+            client_id,
+            client_secret,
+            token: access_token,
+          }),
+        }));
+        console.log("revoke response: " + JSON.stringify(res));
+        settings.settingsStorage.removeItem("access_token");
+      }
+    })
   },
   onRun() {},
   onDestroy() {}
