@@ -11,6 +11,9 @@ import jpeg from 'jpeg-js';
 
 const messageBuilder = new MessageBuilder();
 
+const _tmp = settings.settingsStorage.getItem("instance");
+const instanceDomain = _tmp ? _tmp : INSTANCE_DOMAIN;
+
 const DEFAULT_TIMELINE = "local";
 
 const COMMON_HEADERS = {
@@ -98,7 +101,7 @@ async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = POST_LIMIT_PER
     "home": ["home", ""], //requires auth
   }[timeline] ?? [timeline, ""];
   console.log("fetching " + actual_timeline + " timeline... with limit " + limit + " and etc. query " + query);
-  const posts_raw = await fetchSomething(`https://${INSTANCE_DOMAIN}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
+  const posts_raw = await fetchSomething(`https://${instanceDomain}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
   console.log(JSON.stringify(posts_raw));
   return posts_raw.map(transPost);
 }
@@ -107,7 +110,7 @@ async function fetchPost(post_id, andDescendants = false) {
   console.log("fetching post id " + post_id + " with descendants: " + andDescendants);
 
 
-  const post_status_url = `https://${INSTANCE_DOMAIN}/api/v1/statuses/${post_id}`;
+  const post_status_url = `https://${instanceDomain}/api/v1/statuses/${post_id}`;
   console.log("fetching post from " + post_status_url);
   const post_raw = await fetchSomething(post_status_url);
   console.log("post_raw: " + JSON.stringify(post_raw));
@@ -115,7 +118,7 @@ async function fetchPost(post_id, andDescendants = false) {
 
   let descendants = null;
   if (andDescendants) {
-    const context_url = `https://${INSTANCE_DOMAIN}/api/v1/statuses/${post_id}/context`;
+    const context_url = `https://${instanceDomain}/api/v1/statuses/${post_id}/context`;
     console.log("fetching context from " + context_url);
     const context_raw = await fetchSomething(context_url);
     console.log("context_raw: " + JSON.stringify(context_raw));
@@ -128,7 +131,7 @@ async function fetchPost(post_id, andDescendants = false) {
 
 async function createPost(status) {
   console.log("posting status: " + status);
-  const data = await fetchSomething(`https://${INSTANCE_DOMAIN}/api/v1/statuses`, 'POST', {
+  const data = await fetchSomething(`https://${instanceDomain}/api/v1/statuses`, 'POST', {
     status,
   });
   console.log("post response: " + JSON.stringify(data));
@@ -248,7 +251,7 @@ AppSideService({
       if (key === "_reqest_appid" && newValue === "1") {
         console.log("request for app id");
         const res = resJson(await fetch({
-          url: `https://${INSTANCE_DOMAIN}/api/v1/apps`,
+          url: `https://${instanceDomain}/api/v1/apps`,
           method: 'POST',
           headers: {
             "Accept": "application/json",
@@ -265,7 +268,7 @@ AppSideService({
         const { client_id, client_secret } = JSON.parse(settings.settingsStorage.getItem("oauth_app"));
         //This only works on Mastodon, not Sharkey :p
         const res = resJson(await fetch({
-          url: `https://${INSTANCE_DOMAIN}/oauth/revoke`,
+          url: `https://${instanceDomain}/oauth/revoke`,
           method: 'POST',
           headers: {
             "Accept": "application/json",
