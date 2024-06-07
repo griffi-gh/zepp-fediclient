@@ -1,6 +1,6 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
-import { gotoTimeline, callMeOnScreenInit } from '../utils/navigation.js';
+import { gotoTimeline, callMeOnScreenInit, goto } from '../utils/navigation.js';
 
 import InternetImageComponent from '../utils/components/InternetImageComponent.js';
 import { LayoutManager } from '../utils/layout.js';
@@ -16,11 +16,11 @@ Page({
     callMeOnScreenInit();
   },
   build() {
-    {
-      const man = new LayoutManager();
-      const img = new InternetImageComponent("https://woem.men/files/780c2764-fb28-4d80-91b0-cd8008b5ebc9", 32, 32);
-      img.layout(man);
-    }
+    // {
+    //   const man = new LayoutManager();
+    //   const img = new InternetImageComponent("https://woem.men/files/780c2764-fb28-4d80-91b0-cd8008b5ebc9", 32, 32);
+    //   img.layout(man);
+    // }
 
     let yy = safeArea.y0;
 
@@ -39,37 +39,27 @@ Page({
     });
     yy += 32 + 4;
 
-    hmUI.createWidget(hmUI.widget.BUTTON, {
-      x: safeArea.x0,
-      y: yy,
-      w: safeArea.w,
-      h: 40,
-      text: i18n("timeline_local"),
-      click_func: () => gotoTimeline("local"),
-      ...BUTTON_STYLE,
-    });
-    yy += 40 + 4;
+    for (const timeline of ["local", "public", "home"]) {
+      hmUI.createWidget(hmUI.widget.BUTTON, {
+        x: safeArea.x0,
+        y: yy,
+        w: safeArea.w,
+        h: 40,
+        text: i18n("timeline_" + timeline),
+        click_func: () => gotoTimeline(timeline),
+        ...BUTTON_STYLE,
+      });
+      yy += 40 + 4;
+    }
 
     hmUI.createWidget(hmUI.widget.BUTTON, {
       x: safeArea.x0,
-      y: yy,
+      y: safeArea.y1 - 40,
       w: safeArea.w,
       h: 40,
-      text: i18n("timeline_public"),
-      click_func: () => gotoTimeline("public"),
+      text: i18n("page_write"),
+      click_func: () => goto("write"),
       ...BUTTON_STYLE,
     });
-    yy += 40 + 4;
-
-    hmUI.createWidget(hmUI.widget.BUTTON, {
-      x: safeArea.x0,
-      y: yy,
-      w: safeArea.w,
-      h: 40,
-      text: i18n("timeline_home"),
-      click_func: () => gotoTimeline("home"),
-      ...BUTTON_STYLE,
-    });
-    yy += 40 + 4;
   },
 });

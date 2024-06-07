@@ -7,6 +7,12 @@ msgstr "Loading..."
 msgid "post"
 msgstr "Post"
 
+msgid "page_write"
+msgstr "Write a post"
+
+msgid "write_reply"
+msgstr "Write a reply"
+
 msgid "timeline_title"
 msgstr "Timeline"
 

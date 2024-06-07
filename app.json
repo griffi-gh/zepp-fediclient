@@ -27,7 +27,8 @@
           "pages": [
             "page/index",
             "page/timeline",
-            "page/post"
+            "page/post",
+            "page/write"
           ]
         },
         "app-side": {

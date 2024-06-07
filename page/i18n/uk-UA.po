@@ -7,6 +7,12 @@ msgstr "Завантаження..."
 msgid "post"
 msgstr "Допис"
 
+msgid "write_post"
+msgstr "Написати пост"
+
+msgid "write_reply"
+msgstr "Написати відповідь"
+
 msgid "timeline_title"
 msgstr "Стрічка"
 

@@ -126,6 +126,17 @@ async function fetchPost(post_id, andDescendants = false) {
   return { post, descendants };
 }
 
+async function createPost(status) {
+  console.log("posting status: " + status);
+  const data = await fetchSomething(`https://${INSTANCE_DOMAIN}/api/v1/statuses`, 'POST', {
+    status,
+  });
+  console.log("post response: " + JSON.stringify(data));
+  return {
+    id: data.id,
+  }
+}
+
 function onRequest(ctx, req_data) {
   switch (req_data.request) {
     // case "queryInfo":
@@ -166,6 +177,23 @@ function onRequest(ctx, req_data) {
           data: res_data,
         });
       });
+      break;
+
+    case "createPost":
+      const { status } = req_data;
+      console.log("posting status: " + status);
+      createPost(status).then(res_data => {
+        console.log("Done (trace request id: " + ctx.request.traceId + ")");
+        console.log(JSON.stringify(res_data));
+        ctx.response({
+          requestId: ctx.request.traceId,
+          data: res_data,
+        });
+      });
+      // ctx.response({
+      //   requestId: ctx.request.traceId,
+      //   data: { id: "bogus" },
+      // });
       break;
 
     case "image":
