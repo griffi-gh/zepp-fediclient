@@ -20,8 +20,8 @@ export const CLIENT_META = {
 
 // experimental:
 // allow use of cached internet images (e.g. for profile pictures);
-// currently broken on real device
-export const USE_INTERNET_IMAGE = false;
+// currently broken on real device, so only use for simulator
+export const USE_INTERNET_IMAGE = DEPLOYMENT_TYPE === "simulator";
 
 // image format used by image cache;
 // always use "png" for simulator, "tga" for real device
