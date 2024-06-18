@@ -9,6 +9,7 @@
 
 <b>Features:</b>
 <ul>
+  <li>Supports Mastodon API (/Sharkey) (Misskey support planned)</li>
   <li>Viewing timelines (Local/Public/Home)</li>
   <li>Viewing post/post replies</li>
   <li>Profile pictures (dynamically generated tga; loaded asynchronously)</li>
