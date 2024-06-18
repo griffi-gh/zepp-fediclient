@@ -1,0 +1,5 @@
+{
+  "MD041": false, //first-line-heading
+  "MD013": false, //line-length
+  "MD033": false  //inline-html
+}

@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./assets/194x368-amazfit-band-7/icon.png">
+  <img src="./assets/194x368-amazfit-band-7/icon.png" alt="App logo">
   <br>
   FediClient
 </h1>
@@ -26,11 +26,11 @@
 <!-- <h6>*Currently, only Amazfit Band 7 is officially supported, PRs welcome.</h6> -->
 <h2>Screenshots</h2>
 <span>
-  <img src=".assets/zepp_screenshot_1717273008093.png"><!--
+  <img src=".assets/zepp_screenshot_1717273008093.png" alt="Main menu sceenshot"><!--
 -->&nbsp;&nbsp;<!--
---><img src=".assets/zepp_screenshot_1717272801057.png"><!--
+--><img src=".assets/zepp_screenshot_1717272801057.png" alt="Timeline screenshot 1"><!--
 -->&nbsp;&nbsp;<!--
---><img src=".assets/zepp_screenshot_1717272729052.png">
+--><img src=".assets/zepp_screenshot_1717272729052.png" alt="Timeline screenshot 2">
 </span>
 <p>
 (Screenshots may be out of date)
