@@ -1,7 +1,7 @@
 // Deployment target
 // "simulator" - for running in the ZeppOS emulator
 // "real" - for running on a real device
-export const DEPLOYMENT_TYPE = "simulator";
+export const DEPLOYMENT_TYPE = "real";
 
 // domain of the mastodon instance to be used by default
 // (this is just the default and can be changed in the settings)
@@ -20,8 +20,8 @@ export const CLIENT_META = {
 
 // experimental:
 // allow use of cached internet images (e.g. for profile pictures);
-// currently broken on real device, so only use for simulator
-export const USE_INTERNET_IMAGE = DEPLOYMENT_TYPE === "simulator";
+// may be broken on some real devices, but should always work in the simulator
+export const USE_INTERNET_IMAGE = true;
 
 // image format used by image cache;
 // always use "png" for simulator, "tga" for real device
