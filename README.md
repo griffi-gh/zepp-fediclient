@@ -7,7 +7,17 @@
   Open-source ActivityPub/Mastodon client for ZeppOS
 </h3>
 
-Supported devices:
+<b>Features:</b>
+<ul>
+  <li>Viewing timelines (Local/Public/Home)</li>
+  <li>Viewing post/post replies</li>
+  <li>Profile pictures (dynamically generated tga; loaded asynchronously)</li>
+  <li>Posting (with a t-9 style keyboard)</li>
+  <li>Authentication (optional, OAuth)</li>
+  <li>Localization</li>
+</ul>
+
+<h2>Supported devices</h2>
 <ul>
   <li>Amazfit Band 7 (Zepp OS 1.0)</li>
 </ul>
@@ -23,7 +33,7 @@ Supported devices:
 --><img src=".assets/zepp_screenshot_1717272729052.png">
 </span>
 <p>
-(Screenshots may not be up-to-date)
+(Screenshots may be out of date)
 </p>
 
 <h2>Install (on a real device)</h2>
