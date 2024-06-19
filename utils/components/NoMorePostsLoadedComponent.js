@@ -1,5 +1,7 @@
 import { gettext as i18n } from 'i18n';
 
+//XXX: UNUSED
+
 export default class NoMorePostsLoadedComponent {
   constructor() {}
 

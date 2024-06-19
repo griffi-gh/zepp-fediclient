@@ -1,18 +1,19 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
-import { callMeOnScreenInit } from '../utils/navigation.js';
+import { callMeOnScreenInit, gotoTimeline, reloadTimeline } from '../utils/navigation.js';
 import { LayoutManager } from '../utils/layout.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
-import NoMorePostsLoadedComponent from '../utils/components/NoMorePostsLoadedComponent.js';
 import LoadingAnimationComponent from '../utils/components/LoadingAnimationComponent.js';
+import ButtonComponent from '../utils/components/ButtonComponent.js';
 
 const { messageBuilder } = getApp()._options.globalData;
 
-let currentTimeline = "local";
+let currentTimeline = "local",
+    max_id = null;
 
 let loading_component,
     post_feed_component,
-    no_more_posts_loaded_component;
+    load_more_button_component;
 
 let lifecycle = false;
 
@@ -24,10 +25,16 @@ function on_post_data_ready(data) {
   const man = new LayoutManager(safeArea);
 
   post_feed_component = new PostFeedComponent(data);
-  no_more_posts_loaded_component = new NoMorePostsLoadedComponent();
+  load_more_button_component = new ButtonComponent(
+    i18n("load_more"),
+    () => {
+      const last_id = data[data.length - 1].id;
+      reloadTimeline(currentTimeline, last_id);
+    }
+  );
 
   post_feed_component.layout(man);
-  no_more_posts_loaded_component.layout(man);
+  load_more_button_component.layout(man);
 }
 
 Page({
@@ -36,10 +43,9 @@ Page({
     lifecycle = true;
 
     if (param) {
-      const { goto_timeline } = JSON.parse(param);
-      if (goto_timeline) {
-        currentTimeline = goto_timeline;
-      }
+      const { goto_timeline, goto_max_id } = JSON.parse(param);
+      if (goto_timeline) currentTimeline = goto_timeline;
+      if (max_id != null) max_id = goto_max_id;
     }
   },
 
@@ -58,6 +64,7 @@ Page({
       .request({
         request: "fetchTimeline",
         timeline: currentTimeline,
+        maxId: max_id,
       })
       .then(on_post_data_ready);
   },
@@ -65,6 +72,6 @@ Page({
   onDestroy() {
     lifecycle = false;
     if (post_feed_component) post_feed_component.delete();
-    if (no_more_posts_loaded_component) no_more_posts_loaded_component.delete();
+    if (load_more_button_component) load_more_button_component.delete();
   }
 });

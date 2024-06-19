@@ -27,3 +27,6 @@ msgstr "Локальна"
 
 msgid "no_more_posts"
 msgstr "Більше публікацій\nне завантажено"
+
+msgid "load_more"
+msgstr "Завантажити ще"

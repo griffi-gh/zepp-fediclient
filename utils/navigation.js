@@ -32,22 +32,35 @@ export function registerBackHandler() {
   });
 }
 
-export function goto(page, param = {}) {
+export function goto(page, param = {}, action = "goto") {
   if (getApp()._options.globalData.transitioning) {
     console.log("Already transitioning, ignoring event");
     return;
   }
   console.log("[GOTO] " + page, param);
   getApp()._options.globalData.transitioning = true;
-  pushPreserveData();
-  hmApp.gotoPage({
-    url: "page/" + page,
-    param: JSON.stringify(param)
-  });
+  //XXX: should reload pushPreserveData() here?
+  switch (action) {
+    case "goto":
+      pushPreserveData();
+      hmApp.gotoPage({
+        url: "page/" + page,
+        param: JSON.stringify(param)
+      });
+    case "reload":
+      hmApp.reloadPage({
+        url: "page/" + page,
+        param: JSON.stringify(param)
+      });
+  }
 }
 
-export function gotoTimeline(timeline) {
-  goto("timeline", { goto_timeline: timeline });
+export function gotoTimeline(timeline, max_id = null) {
+  goto("timeline", { goto_timeline: timeline, goto_max_id: max_id });
+}
+
+export function reloadTimeline(timeline, max_id = null) {
+  goto("timeline", { goto_timeline: timeline, goto_max_id: max_id }, "reload");
 }
 
 export function gotoPost(post_id) {

@@ -94,15 +94,19 @@ function transPost(post) {
   };
 }
 
-async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = POST_LIMIT_PER_PAGE) {
+async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = POST_LIMIT_PER_PAGE, maxId = null) {
   const [actual_timeline, query] = {
     "public": ["public", ""],
     "local": ["public", "&local=true"],
     "home": ["home", ""], //requires auth
   }[timeline] ?? [timeline, ""];
+
+  if (maxId) query += "&max_id=" + maxId;
+
   console.log("fetching " + actual_timeline + " timeline... with limit " + limit + " and etc. query " + query);
   const posts_raw = await fetchSomething(`https://${instanceDomain}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
   console.log(JSON.stringify(posts_raw));
+
   return posts_raw.map(transPost);
 }
 
@@ -155,9 +159,12 @@ function onRequest(ctx, req_data) {
     case "fetchTimeline":
       const timeline = req_data.timeline ?? DEFAULT_TIMELINE;
       const limit = req_data.limit ?? POST_LIMIT_PER_PAGE;
+      const maxId = req_data.maxId ?? null;
 
       console.log(`fetching up to ${limit} posts from "${timeline}" timeline...`);
-      fetchTimeline(timeline).then(res_data => {
+      if (maxId) console.log("also, we got maxId: " + maxId);
+
+      fetchTimeline(timeline, limit, maxId).then(res_data => {
         console.log("Done (trace request id: " + ctx.request.traceId + ")");
         console.log(JSON.stringify(res_data));
         ctx.response({
