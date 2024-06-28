@@ -4,7 +4,7 @@
   FediClient
 </h1>
 <h3 align="center">
-  Open-source ActivityPub/Mastodon client for ZeppOS
+  Open-source Mastodon client for ZeppOS
 </h3>
 
 <b>Features:</b>
