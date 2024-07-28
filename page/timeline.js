@@ -1,5 +1,5 @@
 import { gettext as i18n } from 'i18n';
-import { safeArea } from '../utils/util.js';
+import { handleError, safeArea } from '../utils/util.js';
 import { callMeOnScreenInit, gotoTimeline, reloadTimeline } from '../utils/navigation.js';
 import { LayoutManager } from '../utils/layout.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
@@ -37,41 +37,46 @@ function on_post_data_ready(data) {
   load_more_button_component.layout(man);
 }
 
-Page({
-  onInit(param) {
-    callMeOnScreenInit();
-    lifecycle = true;
+try {
+  Page({
+    onInit(param) {
+      callMeOnScreenInit();
+      lifecycle = true;
 
-    if (param) {
-      const { goto_timeline, goto_max_id } = JSON.parse(param);
-      if (goto_timeline) currentTimeline = goto_timeline;
-      if (max_id != null) max_id = goto_max_id;
+      if (param) {
+        const { goto_timeline, goto_max_id } = JSON.parse(param);
+        if (goto_timeline) currentTimeline = goto_timeline;
+        if (goto_max_id != null) max_id = goto_max_id;
+      }
+    },
+
+    build() {
+      console.log("Building timeline '" + currentTimeline + "'");
+      const timeline_title = i18n("timeline_" + currentTimeline);
+      hmUI.updateStatusBarTitle(timeline_title);
+      hmUI.setLayerScrolling(true);
+
+      loading_component = new LoadingAnimationComponent();
+      loading_component.layout({
+        x: (safeArea.w - 48) / 2,
+        y: (safeArea.h - 48) / 2,
+      });
+
+      messageBuilder
+        .request({
+          request: "fetchTimeline",
+          timeline: currentTimeline,
+          maxId: max_id,
+        })
+        .then(on_post_data_ready);
+    },
+
+    onDestroy() {
+      lifecycle = false;
+      if (post_feed_component) post_feed_component.delete();
+      if (load_more_button_component) load_more_button_component.delete();
     }
-  },
-
-  build() {
-    const timeline_title = i18n("timeline_" + currentTimeline);
-    hmUI.updateStatusBarTitle(timeline_title);
-    hmUI.setLayerScrolling(true);
-
-    loading_component = new LoadingAnimationComponent();
-    loading_component.layout({
-      x: (safeArea.w - 48) / 2,
-      y: (safeArea.h - 48) / 2,
-    });
-
-    messageBuilder
-      .request({
-        request: "fetchTimeline",
-        timeline: currentTimeline,
-        maxId: max_id,
-      })
-      .then(on_post_data_ready);
-  },
-
-  onDestroy() {
-    lifecycle = false;
-    if (post_feed_component) post_feed_component.delete();
-    if (load_more_button_component) load_more_button_component.delete();
-  }
-});
+  });
+} catch(err) {
+  handleError(err);
+}

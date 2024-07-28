@@ -95,7 +95,7 @@ function transPost(post) {
 }
 
 async function fetchTimeline(timeline = DEFAULT_TIMELINE, limit = POST_LIMIT_PER_PAGE, maxId = null) {
-  const [actual_timeline, query] = {
+  let [actual_timeline, query] = {
     "public": ["public", ""],
     "local": ["public", "&local=true"],
     "home": ["home", ""], //requires auth

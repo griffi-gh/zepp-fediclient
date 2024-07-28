@@ -1,5 +1,5 @@
 import { gettext as i18n } from 'i18n';
-import { safeArea } from '../utils/util.js';
+import { handleError, safeArea } from '../utils/util.js';
 import { LayoutManager } from '../utils/layout.js';
 import { callMeOnScreenInit, gotoPost } from '../utils/navigation.js';
 import KeyboardComponent from '../utils/components/KeyboardComponent.js';
@@ -38,23 +38,27 @@ function on_text_submitted(text) {
   });
 }
 
-Page({
-  onInit(param) {
-    callMeOnScreenInit();
-    lifecycle = true;
-    // TODO param: reply_to
-  },
-  build() {
-    hmUI.updateStatusBarTitle(i18n("page_write")); //IF REPLY: i18n("write_reply")
-    hmUI.setLayerScrolling(false);
+try {
+  Page({
+    onInit(param) {
+      callMeOnScreenInit();
+      lifecycle = true;
+      // TODO param: reply_to
+    },
+    build() {
+      hmUI.updateStatusBarTitle(i18n("page_write")); //IF REPLY: i18n("write_reply")
+      hmUI.setLayerScrolling(false);
 
-    const man = new LayoutManager(safeArea);
-    keyboard_component = new KeyboardComponent(on_text_submitted, true);
-    keyboard_component.layout(man);
-  },
-  onDestroy() {
-    lifecycle = false;
-    // if (keyboard_component) keyboard_component.delete();
-    if (loading_component) loading_component.delete();
-  }
-});
+      const man = new LayoutManager(safeArea);
+      keyboard_component = new KeyboardComponent(on_text_submitted, true);
+      keyboard_component.layout(man);
+    },
+    onDestroy() {
+      lifecycle = false;
+      // if (keyboard_component) keyboard_component.delete();
+      if (loading_component) loading_component.delete();
+    }
+  });
+} catch (err) {
+  handleError(err);
+}
