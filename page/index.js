@@ -2,9 +2,6 @@ import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
 import { gotoTimeline, callMeOnScreenInit, goto } from '../utils/navigation.js';
 
-import InternetImageComponent from '../utils/components/InternetImageComponent.js';
-import { LayoutManager } from '../utils/layout.js';
-
 const BUTTON_STYLE = {
   normal_color: 0x333333,
   press_color: 0x666666,
@@ -62,4 +59,4 @@ Page({
       ...BUTTON_STYLE,
     });
   },
-});
+})

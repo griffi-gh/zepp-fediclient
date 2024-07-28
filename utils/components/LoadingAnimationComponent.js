@@ -28,6 +28,10 @@ export default class LoadingAnimationComponent {
 
   delete() {
     //this._img.setProperty(hmUI.prop.ANIM_STATUS, hmUI.anim_status.STOP);
-    hmUI.deleteWidget(this._img);
+    this._deleted = true;
+    if (this._img) {
+      hmUI.deleteWidget(this._img);
+      this._img = null;
+    }
   }
 }

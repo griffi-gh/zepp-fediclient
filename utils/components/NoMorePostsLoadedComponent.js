@@ -1,5 +1,7 @@
 import { gettext as i18n } from 'i18n';
 
+//XXX: UNUSED
+
 export default class NoMorePostsLoadedComponent {
   constructor() {}
 
@@ -19,6 +21,10 @@ export default class NoMorePostsLoadedComponent {
   }
 
   delete() {
-    hmUI.deleteWidget(this._text);
+    this._deleted = true;
+    if (this._text) {
+      hmUI.deleteWidget(this._text);
+      this._text = null;
+    }
   }
 }

@@ -54,7 +54,14 @@ export default class ReactionComponent {
   }
 
   delete() {
-    hmUI.deleteWidget(this._img);
-    hmUI.deleteWidget(this._text);
+    this._deleted = true;
+    if (this._img) {
+      hmUI.deleteWidget(this._img);
+      this._img = null;
+    }
+    if (this._text) {
+      hmUI.deleteWidget(this._text);
+      this._text = null;
+    }
   }
 }

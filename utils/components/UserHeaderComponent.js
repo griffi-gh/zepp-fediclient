@@ -84,9 +84,21 @@ export default class UserHeaderComponent {
   }
 
   delete() {
-    if (this._img) hmUI.deleteWidget(this._img);
-    if (this.netimg_component) this.netimg_component.delete();
-    hmUI.deleteWidget(this._text_username);
-    hmUI.deleteWidget(this._text_acct);
+    this._deleted = true;
+    if (this._img) {
+      hmUI.deleteWidget(this._img);
+      this._img = null;
+    }
+    if (this.netimg_component) {
+      this.netimg_component.delete();
+    }
+    if (this._text_username) {
+      hmUI.deleteWidget(this._text_username);
+      this._text_username = null;
+    }
+    if (this._text_acct) {
+      hmUI.deleteWidget(this._text_acct);
+      this._text_acct = null;
+    }
   }
 }

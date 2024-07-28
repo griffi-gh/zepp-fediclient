@@ -6,7 +6,6 @@ import LoadingAnimationComponent from '../utils/components/LoadingAnimationCompo
 import PostComponent from '../utils/components/PostComponent.js';
 import PostFeedComponent from '../utils/components/PostFeedComponent.js';
 import SeparatorComponent from '../utils/components/SeparatorComponent.js';
-//import NoMorePostsLoadedComponent from '../utils/components/NoMorePostsLoadedComponent.js';
 
 const { messageBuilder } = getApp()._options.globalData;
 
@@ -69,4 +68,4 @@ Page({
     if (post_component) post_component.delete();
     if (post_feed_component) post_feed_component.delete();
   }
-});
+})

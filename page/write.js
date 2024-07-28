@@ -57,4 +57,4 @@ Page({
     // if (keyboard_component) keyboard_component.delete();
     if (loading_component) loading_component.delete();
   }
-});
+})

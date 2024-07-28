@@ -6,6 +6,7 @@ App({
   globalData: {
     messageBuilder: null,
     preserveData: null,
+    transitioning: null,
   },
   onCreate(options) {
     console.log('app on create invoke');
@@ -18,6 +19,7 @@ App({
     this.globalData.messageBuilder = new MessageBuilder({ appId });
     this.globalData.messageBuilder.connect();
 
+    this.globalData.transitioning = false;
     this.globalData.preserveData = {
       data: null,
       stack: [],

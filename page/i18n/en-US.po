@@ -27,3 +27,6 @@ msgstr "Local"
 
 msgid "no_more_posts"
 msgstr "No more posts\nwere loaded"
+
+msgid "load_more"
+msgstr "Load more posts"

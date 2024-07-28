@@ -147,12 +147,14 @@ export default class KeyboardComponent {
   }
 
   delete() {
+    this._deleted = true;
     for (const wgt of this._key_widget) {
       hmUI.deleteWidget(wgt);
     }
     this._key_widget = [];
     if (this._preview_widget) {
       hmUI.deleteWidget(this._preview_widget);
+      this._preview_widget = null;
     }
   }
 }

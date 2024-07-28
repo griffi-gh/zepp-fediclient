@@ -1,7 +1,7 @@
 // Deployment target
 // "simulator" - for running in the ZeppOS emulator
 // "real" - for running on a real device
-export const DEPLOYMENT_TYPE = "real";
+export const DEPLOYMENT_TYPE = "simulator";
 
 // domain of the mastodon instance to be used by default
 // (this is just the default and can be changed in the settings)
@@ -37,3 +37,7 @@ export const TGA_USE_RLE = false;
 // number of posts to fetch per page on the timeline
 // keep as low as possible to reduce memory usage
 export const POST_LIMIT_PER_PAGE = 5;
+
+// max post length in characters in the timeline
+// set to "false" to disable the limit
+export const POST_MAX_LENGTH = 130;
