@@ -47,6 +47,10 @@ Prerequisites:
   <li>Install <code>zeus</code> (<code>npm i @zeppos/zeus-cli -g</code>)</li>
 </ul>
 
+<p>
+  Warning: Make sure <code>DEPLOYMENT_TYPE</code> is set to <code>"real"</code> in configuration.js
+</p>
+
 Build and install from source:
 <ol>
   <!-- <li>
