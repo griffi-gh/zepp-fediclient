@@ -1,3 +1,9 @@
+// App ID
+// - If set, MUST match the App ID in app.json
+// - Set to "null" to get automatically
+//   (which may crash ZeppOS 1.0 devices due to an OS bug)
+export const APP_ID = 56349;
+
 // Deployment target
 // "simulator" - for running in the ZeppOS emulator
 // "real" - for running on a real device
