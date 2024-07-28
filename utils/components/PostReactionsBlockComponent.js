@@ -40,6 +40,7 @@ export default class PostReactionsBlockComponent {
   }
 
   delete() {
+    this._deleted = true;
     this.like_count_component.delete();
     this.reblog_count_component.delete();
     this.reply_count_component.delete();

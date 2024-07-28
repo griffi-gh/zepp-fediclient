@@ -37,3 +37,7 @@ export const TGA_USE_RLE = false;
 // number of posts to fetch per page on the timeline
 // keep as low as possible to reduce memory usage
 export const POST_LIMIT_PER_PAGE = 5;
+
+// max post length in characters in the timeline
+// set to "false" to disable the limit
+export const POST_MAX_LENGTH = 130;

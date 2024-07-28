@@ -13,6 +13,7 @@ export function popPreserveData() {
 export function callMeOnScreenInit() {
   console.log("transitioning done");
   getApp()._options.globalData.transitioning = false;
+  hmUI.setStatusBarVisible(true);
 }
 
 export function registerBackHandler() {
@@ -25,7 +26,8 @@ export function registerBackHandler() {
       } else {
         getApp()._options.globalData.transitioning = true;
         popPreserveData();
-        hmApp.goBack();
+        // hmApp.goBack();
+        return false; // actually go back
       }
     }
     return true;
@@ -47,20 +49,32 @@ export function goto(page, param = {}, action = "goto") {
         url: "page/" + page,
         param: JSON.stringify(param)
       });
+      break;
     case "reload":
       hmApp.reloadPage({
         url: "page/" + page,
         param: JSON.stringify(param)
       });
+      break;
+    default:
+      throw new Error("Unknown action: " + action);
   }
 }
 
-export function gotoTimeline(timeline, max_id = null) {
-  goto("timeline", { goto_timeline: timeline, goto_max_id: max_id });
+export function gotoTimeline(timeline, max_id = null, page_idx = null) {
+  goto("timeline", {
+    goto_timeline: timeline,
+    goto_max_id: max_id,
+    goto_page_idx: page_idx,
+  });
 }
 
-export function reloadTimeline(timeline, max_id = null) {
-  goto("timeline", { goto_timeline: timeline, goto_max_id: max_id }, "reload");
+export function reloadTimeline(timeline, max_id = null, page_idx = null) {
+  goto("timeline", {
+    goto_timeline: timeline,
+    goto_max_id: max_id,
+    goto_page_idx: page_idx,
+  }, "reload");
 }
 
 export function gotoPost(post_id) {

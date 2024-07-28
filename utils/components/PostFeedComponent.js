@@ -20,9 +20,11 @@ export default class PostFeedComponent {
   }
 
   delete() {
+    this._deleted = true;
     for (const { post, separator } of this.components) {
       post.delete();
       separator.delete();
     }
+    this.components = [];
   }
 }

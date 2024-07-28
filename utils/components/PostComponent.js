@@ -102,7 +102,10 @@ export default class PostComponent {
       //this._body.removeEventListener(hmUI.event.CLICK_UP, this._postClickCb);
       this._click_helper.detach();
     }
-    hmUI.deleteWidget(this._body);
+    if (this._body) {
+      hmUI.deleteWidget(this._body);
+      this._body = null;
+    }
     this.post_reactions_block_component.delete();
   }
 }

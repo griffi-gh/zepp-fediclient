@@ -21,6 +21,10 @@ export default class NoMorePostsLoadedComponent {
   }
 
   delete() {
-    hmUI.deleteWidget(this._text);
+    this._deleted = true;
+    if (this._text) {
+      hmUI.deleteWidget(this._text);
+      this._text = null;
+    }
   }
 }

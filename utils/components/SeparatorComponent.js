@@ -17,6 +17,10 @@ export default class SeparatorComponent {
   }
 
   delete() {
-    hmUI.deleteWidget(this._rect);
+    this._deleted = true;
+    if (this._rect) {
+      hmUI.deleteWidget(this._rect);
+      this._rect = null;
+    }
   }
 }

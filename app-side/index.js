@@ -4,6 +4,7 @@ import {
   POST_LIMIT_PER_PAGE,
   TGA_USE_RLE,
   CLIENT_META,
+  POST_MAX_LENGTH,
 } from "../configuration.js";
 import { MessageBuilder } from "../lib/zepp/message.js";
 import createTgaBuffer from "../utils/tga.js";
@@ -144,6 +145,17 @@ async function createPost(status) {
   }
 }
 
+function trimPostLen(post, len) {
+  if (!len) return post;
+  if (post.content && (post.content.length > len)) {
+    post.content = post.content.substring(0, len) + "...";
+  }
+  if (post.reblog?.content && (post.reblog.content.length > len)) {
+    post.reblog.content = post.reblog.content.substring(0, len) + "...";
+  }
+  return post;
+}
+
 function onRequest(ctx, req_data) {
   switch (req_data.request) {
     // case "queryInfo":
@@ -160,11 +172,16 @@ function onRequest(ctx, req_data) {
       const timeline = req_data.timeline ?? DEFAULT_TIMELINE;
       const limit = req_data.limit ?? POST_LIMIT_PER_PAGE;
       const maxId = req_data.maxId ?? null;
+      const maxPostLen = req_data.maxPostLen ?? POST_MAX_LENGTH;
 
       console.log(`fetching up to ${limit} posts from "${timeline}" timeline...`);
-      if (maxId) console.log("also, we got maxId: " + maxId);
+      if (maxId) console.log("^ also, we got maxId: " + maxId);
+      if (maxPostLen) console.log("^ and, we will trim post content to " + maxPostLen + " chars");
 
       fetchTimeline(timeline, limit, maxId).then(res_data => {
+        if (maxPostLen) {
+          res_data = res_data.map(post => trimPostLen(post, maxPostLen));
+        }
         console.log("Done (trace request id: " + ctx.request.traceId + ")");
         console.log(JSON.stringify(res_data));
         ctx.response({

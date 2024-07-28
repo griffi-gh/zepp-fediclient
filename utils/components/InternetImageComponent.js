@@ -43,6 +43,7 @@ export default class InternetImageComponent {
     this._deleted = true;
     if (this._img) {
       hmUI.deleteWidget(this._img);
+      this._img = null;
     }
   }
 }

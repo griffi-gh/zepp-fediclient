@@ -30,7 +30,8 @@ export default class ButtonComponent {
   delete() {
     this._deleted = true;
     if (this._button) {
-      this._button.delete();
+      hmUI.deleteWidget(this._button);
+      this._button = null;
     }
   }
 }
