@@ -16,17 +16,25 @@ export function callMeOnScreenInit() {
   hmUI.setStatusBarVisible(true);
 }
 
+let safety = 0;
 export function registerBackHandler() {
   hmApp.registerGestureEvent(event => {
     if (event == hmApp.gesture.RIGHT) {
       console.log("[GOTO] back");
       if (getApp()._options.globalData.transitioning) {
         console.log("Already transitioning, ignoring event");
+        safety++;
+        if (safety > 10) {
+          safety = 0;
+          console.log("safety trigger, exiting app");
+          hmApp.exit();
+        }
         return true;
       } else {
         getApp()._options.globalData.transitioning = true;
         popPreserveData();
         // hmApp.goBack();
+        safety = 0;
         return false; // actually go back
       }
     }
