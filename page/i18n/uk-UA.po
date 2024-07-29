@@ -28,6 +28,9 @@ msgstr "Локальна"
 msgid "no_more_posts"
 msgstr "Більше публікацій\nне завантажено"
 
+msgid "no_posts"
+msgstr "Публікацій\nне завантажено"
+
 msgid "load_more"
 msgstr "Завантажити ще"
 
@@ -36,3 +39,6 @@ msgstr "Необхідне\nналаштування"
 
 msgid "setup_required_etc"
 msgstr "Щоб продовжити,\nналаштуйте свій сервер\nі/або обліковий запис\nв додатку Zepp"
+
+msgid "user"
+msgstr "Користувач"

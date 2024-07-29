@@ -14,7 +14,7 @@ const messageBuilder = new MessageBuilder();
 
 function onRequest(ctx, req_data) {
   switch (req_data.request) {
-    case "init":
+    case "init": {
       console.log("init request");
       ctx.response({
         requestId: ctx.request.traceId,
@@ -26,8 +26,9 @@ function onRequest(ctx, req_data) {
         },
       });
       break;
+    }
 
-    case "fetchTimeline":
+    case "fetchTimeline": {
       const timeline = req_data.timeline ?? mastodon.DEFAULT_TIMELINE;
       const limit = req_data.limit ?? POST_LIMIT_PER_PAGE;
       const maxId = req_data.maxId ?? null;
@@ -48,8 +49,57 @@ function onRequest(ctx, req_data) {
         });
       });
       break;
+    }
 
-    case "fetchPost":
+    case "fetchUser": {
+      const acct_id = req_data.acct_id;
+      const need_user_header = req_data.need_user_header ?? false;
+      const need_user_posts = req_data.need_user_posts ?? false;
+      const limit = req_data.limit ?? POST_LIMIT_PER_PAGE;
+      const maxId = req_data.maxId ?? null;
+      const maxPostLen = req_data.maxPostLen ?? POST_MAX_LENGTH;
+
+      console.log("fetching user id " + acct_id);
+      if (need_user_header) {
+        console.log("^ we need user header");
+      }
+      if (need_user_posts) {
+        console.log("^ we need user posts, up to " + limit);
+      }
+      if (maxId) {
+        console.log("^ and, we got maxId: " + maxId);
+      }
+      if (maxPostLen) {
+        console.log("^ and, we will trim post content to " + maxPostLen + " chars");
+      }
+
+      (async () => {
+        let header = null;
+        if (need_user_header) {
+          header = await mastodon.fetchUser(acct_id);
+        }
+
+        let posts = null;
+        if (need_user_posts) {
+          posts = await mastodon.fetchUserPosts({ acct_id, limit, maxId, maxPostLen });
+        }
+
+        const res_data = {
+          user_header: header,
+          user_posts: posts,
+        };
+
+        console.log(JSON.stringify(res_data));
+
+        ctx.response({
+          requestId: ctx.request.traceId,
+          data: res_data,
+        });
+      })();
+      break;
+    }
+
+    case "fetchPost": {
       const { id, andDescendants } = req_data;
 
       console.log("request for post id " + id + " with descendants: " + andDescendants);
@@ -62,8 +112,9 @@ function onRequest(ctx, req_data) {
         });
       });
       break;
+    }
 
-    case "createPost":
+    case "createPost": {
       const { status } = req_data;
 
       console.log("posting status: " + status);
@@ -76,8 +127,9 @@ function onRequest(ctx, req_data) {
         });
       });
       break;
+    }
 
-    case "image":
+    case "image": {
       const { url, width, height } = req_data;
 
       console.log("image request for " + url + " with size " + width + "x" + height);
@@ -109,6 +161,7 @@ function onRequest(ctx, req_data) {
         });
       });
       break;
+    }
 
     default:
       console.log("unhandled request: " + req_data.request);

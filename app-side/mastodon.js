@@ -38,6 +38,7 @@ function transPost(post) {
               post.account.username ??
               post.account.acct,
     acct: post.account.acct,
+    acct_id: post.account.id,
 
     content: post.text ?? post.content ?? null,
 
@@ -48,6 +49,26 @@ function transPost(post) {
     replies: post.replies_count,
 
     reblog: post.reblog ? transPost(post.reblog) : null,
+  };
+}
+
+function transUser(user) {
+  return {
+    id: user.id,
+
+    profile_pic: user.avatar ?? null,
+    username: user.display_name ?? user.username,
+    acct: user.acct,
+
+    //TODO: add header (banner) image?
+
+    followers: user.followers_count,
+    following: user.following_count,
+    posts: user.statuses_count,
+
+    description: user.note,
+
+    //is_bot: user.bot,
   };
 }
 
@@ -80,6 +101,33 @@ export async function fetchTimeline({
 
   console.log("fetching " + actual_timeline + " timeline... with limit " + limit + " and etc. query " + query);
   const posts_raw = await fetchSomething(`https://${instance()}/api/v1/timelines/${actual_timeline}?limit=${limit}${query}`);
+
+  return posts_raw
+    .map(transPost)
+    .map(post => trimPostLen(post, maxPostLen));
+}
+
+export async function fetchUser(acct_id) {
+  console.log("fetching user id " + acct_id);
+
+  const user_raw = await fetchSomething(`https://${instance()}/api/v1/accounts/${acct_id}`);
+  return transUser(user_raw);
+}
+
+//TODO pinned posts? (?pinned=true) and display them first
+export async function fetchUserPosts({
+  acct_id,
+  limit = POST_LIMIT_PER_PAGE,
+  maxId = null,
+  maxPostLen = null,
+}) {
+  if (!acct_id) return [];
+
+  let query = "";
+  if (maxId) query += "&max_id=" + maxId;
+
+  console.log("fetching posts of user id " + acct_id + " with etc. query " + query);
+  const posts_raw = await fetchSomething(`https://${instance()}/api/v1/accounts/${acct_id}/statuses?limit=${limit}${query}`);
 
   return posts_raw
     .map(transPost)

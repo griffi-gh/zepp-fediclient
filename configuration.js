@@ -40,10 +40,10 @@ export const INTERNET_IMAGE_MODE = {
 // experimental, may be broken
 export const TGA_USE_RLE = false;
 
-// number of posts to fetch per page on the timeline
+// number of posts to fetch per page on the timeline and user post pages
 // keep as low as possible to reduce memory usage
 export const POST_LIMIT_PER_PAGE = 5;
 
-// max post length in characters in the timeline
+// max post length in characters in the timeline and user post pages
 // set to "false" to disable the limit
 export const POST_MAX_LENGTH = 130;

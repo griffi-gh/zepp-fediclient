@@ -30,10 +30,10 @@ App({
 
     // Set up navigation handler
     this.globalData.transitioning = false;
-    this.globalData.preserveData = {
-      data: null,
-      stack: [],
-    };
+    // this.globalData.preserveData = {
+    //   data: null,
+    //   stack: [],
+    // };
     registerBackHandler();
 
     // Keep screen on (600 = 20 minutes)

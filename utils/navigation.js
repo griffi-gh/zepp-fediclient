@@ -1,13 +1,13 @@
 export function pushPreserveData() {
-  const { preserveData } = getApp()._options.globalData;
-  preserveData.stack.push(preserveData.data);
-  preserveData.data = null;
+  // const { preserveData } = getApp()._options.globalData;
+  // preserveData.stack.push(preserveData.data);
+  // preserveData.data = null;
 }
 
 export function popPreserveData() {
-  const { preserveData } = getApp()._options.globalData;
-  if (preserveData.stack.length == 0) return;
-  preserveData.data = preserveData.stack.pop();
+  // const { preserveData } = getApp()._options.globalData;
+  // if (preserveData.stack.length == 0) return;
+  // preserveData.data = preserveData.stack.pop();
 }
 
 export function callMeOnScreenInit() {

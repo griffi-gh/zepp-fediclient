@@ -28,7 +28,8 @@
             "page/index",
             "page/timeline",
             "page/post",
-            "page/write"
+            "page/write",
+            "page/user"
           ]
         },
         "app-side": {
