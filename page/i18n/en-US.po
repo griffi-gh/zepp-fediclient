@@ -30,3 +30,9 @@ msgstr "No more posts\nwere loaded"
 
 msgid "load_more"
 msgstr "Load more posts"
+
+msgid "setup_required"
+msgstr "Setup required"
+
+msgid "setup_required_etc"
+msgstr "Set up your server\nand/or account\nin the Zepp app\nto continue"

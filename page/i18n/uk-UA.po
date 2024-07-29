@@ -7,7 +7,7 @@ msgstr "Завантаження..."
 msgid "post"
 msgstr "Допис"
 
-msgid "write_post"
+msgid "page_write"
 msgstr "Написати пост"
 
 msgid "write_reply"
@@ -30,3 +30,9 @@ msgstr "Більше публікацій\nне завантажено"
 
 msgid "load_more"
 msgstr "Завантажити ще"
+
+msgid "setup_required"
+msgstr "Необхідне\nналаштування"
+
+msgid "setup_required_etc"
+msgstr "Щоб продовжити,\nналаштуйте свій сервер\nі/або обліковий запис\nв додатку Zepp"

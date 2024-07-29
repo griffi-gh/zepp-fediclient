@@ -11,7 +11,7 @@ export const DEPLOYMENT_TYPE = "simulator";
 
 // domain of the mastodon instance to be used by default
 // (this is just the default and can be changed in the settings)
-export const INSTANCE_DOMAIN = "woem.men";
+export const INSTANCE_DOMAIN = "mastodon.social"; // "woem.men"
 
 // Metadata of the OAuth application
 export const CLIENT_META = {
