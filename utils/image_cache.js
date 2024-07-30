@@ -12,8 +12,15 @@ export function getCachedImagePath(url, width = 0, height = 0) {
 
 const inProgressReqests = new Map();
 
-export function ensureImageCached(url, width = null, height = null, callback = _ => {}) {
-  const path = getCachedImagePath(url, width, height);
+// WARN: override_path disables the cache
+export function ensureImageCached(
+  url,
+  width = null,
+  height = null,
+  override_path = null,
+  callback = _ => {},
+) {
+  const path = override_path ?? getCachedImagePath(url, width, height);
 
   // already requested? add callback to the list
   if (inProgressReqests.has(url)) {
@@ -22,12 +29,14 @@ export function ensureImageCached(url, width = null, height = null, callback = _
     return;
   }
 
-  //file exists? resolve immediately
-  const [_, err] = hmFS.stat_asset(path);
-  if (err === 0) {
-    console.log("file exists, resolving immediately")
-    callback(path);
-    return;
+  if (!override_path) {
+    //file exists? resolve immediately
+    const [_, err] = hmFS.stat_asset(path);
+    if (err === 0) {
+      console.log("file exists, resolving immediately")
+      callback(path);
+      return;
+    }
   }
 
   //doesn't exist? request it over ble

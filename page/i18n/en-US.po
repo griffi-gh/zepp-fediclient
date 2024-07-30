@@ -42,3 +42,6 @@ msgstr "Set up your server\nand/or account\nin the Zepp app\nto continue"
 
 msgid "user"
 msgstr "User"
+
+msgid "media"
+msgstr "Image viewer"

@@ -29,7 +29,8 @@
             "page/timeline",
             "page/post",
             "page/write",
-            "page/user"
+            "page/user",
+            "page/media"
           ]
         },
         "app-side": {
