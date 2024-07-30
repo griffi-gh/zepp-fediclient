@@ -10,7 +10,7 @@ import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
 //Are those just reblogs with content attached?
 //XXX: check how masto/sharkey do it
 
-const TEXT_SIZE_NORMAL = 16;
+const TEXT_SIZE_NORMAL = 18;
 const TEXT_SIZE_ENLARGED = 22;
 
 // Post component, looks like:
