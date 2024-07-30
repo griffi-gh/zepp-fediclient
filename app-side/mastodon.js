@@ -1,4 +1,4 @@
-import { fetchSomething } from "./fetch.js";
+import { fetchSomething, resJson, COMMON_HEADERS } from "./fetch.js";
 import {
   CLIENT_META,
   INSTANCE_DOMAIN,
@@ -172,7 +172,7 @@ export async function createPost(status) {
 export async function createApp() {
   console.log("request for app id");
   const res = resJson(await fetch({
-    url: `https://${instanceDomain}/api/v1/apps`,
+    url: `https://${instance()}/api/v1/apps`,
     method: 'POST',
     headers: {
       "Accept": "application/json",
@@ -191,7 +191,7 @@ export async function revokeToken() {
   const { client_id, client_secret } = JSON.parse(settings.settingsStorage.getItem("oauth_app"));
   //This only works on Mastodon, not Sharkey :p
   const res = resJson(await fetch({
-    url: `https://${instanceDomain}/oauth/revoke`,
+    url: `https://${instance()}/oauth/revoke`,
     method: 'POST',
     headers: {
       "Accept": "application/json",
