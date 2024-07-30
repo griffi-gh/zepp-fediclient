@@ -2,11 +2,13 @@ import PostComponent from './PostComponent.js';
 import SeparatorComponent from './SeparatorComponent.js';
 
 export default class PostFeedComponent {
-  constructor(posts, body_clickable = true) {
+  constructor(posts, flags = {
+    body_clickable: true,
+  }) {
     this.posts = posts;
     this.components = posts.map(post => {
       return {
-        post: new PostComponent(post, body_clickable),
+        post: new PostComponent(post, flags),
         separator: new SeparatorComponent(10),
       }
     });

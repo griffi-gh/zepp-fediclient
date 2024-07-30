@@ -31,7 +31,8 @@ function on_post_data_ready(data) {
     () => {
       const last_id = data[data.length - 1].id;
       reloadTimeline(currentTimeline, last_id, page_idx + 1);
-    }
+    },
+    -1, 70, //w, h,
   );
 
   post_feed_component.layout(man);

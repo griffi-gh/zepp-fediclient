@@ -1,3 +1,4 @@
+import { CleanupHelper } from '../layout.js';
 import { textSize, wrapText } from '../util.js';
 import { gotoPost } from '../navigation.js';
 import FullClickHelper from '../full_click.js';
@@ -9,20 +10,30 @@ import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
 //Are those just reblogs with content attached?
 //XXX: check how masto/sharkey do it
 
+const TEXT_SIZE_NORMAL = 16;
+const TEXT_SIZE_ENLARGED = 22;
+
 // Post component, looks like:
 // ([reblog_user_header]) if reblog
 // [user_header]
 // [post_content]
 // [react_block]
 export default class PostComponent {
-  constructor(post, body_clickable = false) {
+  constructor(post, {
+    body_clickable = false,
+    embiggen = false,
+  } = {}) {
     this.post = post;
     this.on_click_go_to_post_page = !!body_clickable;
+    this.embiggen = !!embiggen;
+
+    this.clean = new CleanupHelper();
 
     if (post.reblog) {
       this.reblog_user_header_component = new ReblogUserHeaderComponent(
         post.username,
       );
+      this.clean.addComponent(this.reblog_user_header_component);
     }
 
     const target_post = post.reblog ?? post;
@@ -32,6 +43,7 @@ export default class PostComponent {
       target_post.acct,
       target_post.profile_pic,
     );
+    this.clean.addComponent(this.user_header_component);
 
     this.post_reactions_block_component = new PostReactionsBlockComponent(
       target_post.likes,
@@ -40,6 +52,7 @@ export default class PostComponent {
       target_post.reblog_active,
       target_post.replies,
     );
+    this.clean.addComponent(this.post_reactions_block_component);
   }
 
   layout(man) {
@@ -55,28 +68,30 @@ export default class PostComponent {
     this.user_header_component.layout(man);
 
     // CONTENT BLOCK
-    const CONTENT_TEXT_SIZE = 16;
+    const content_text_size = this.embiggen ? TEXT_SIZE_ENLARGED : TEXT_SIZE_NORMAL;
 
-    const wt = wrapText(target_post.content, CONTENT_TEXT_SIZE);
-    const sz = textSize(wt, CONTENT_TEXT_SIZE).height;
-    this._body = hmUI.createWidget(hmUI.widget.TEXT, {
+    const wt = wrapText(target_post.content, content_text_size);
+    const sz = textSize(wt, content_text_size).height;
+    const body_widget = hmUI.createWidget(hmUI.widget.TEXT, {
       x: man.x,
       y: man.y,
       w: man.area.w,
       h: sz,
       text: wt,
-      text_size: CONTENT_TEXT_SIZE,
+      text_size: content_text_size,
       color: 0xFFFFFF,
       align_h: hmUI.align.LEFT,
       text_style: hmUI.text_style.ELLIPSIS,
     });
+    this.clean.addWidget(body_widget);
+
     if (this.on_click_go_to_post_page) {
-      this._click_helper = new FullClickHelper(
-        this._body,
+      let post_click_helper = new FullClickHelper(
+        body_widget,
         this.postClick.bind(this)
       );
-      this._click_helper.attach();
-      // this._body.addEventListener(hmUI.event.CLICK_UP, this._postClickCb);
+      post_click_helper.attach();
+      this.clean.addAttachment(post_click_helper);
     }
     man.account(0, sz);
 
@@ -94,18 +109,9 @@ export default class PostComponent {
 
   delete() {
     this._deleted = true;
-    if (this.reblog_user_header_component) {
-      this.reblog_user_header_component.delete();
-    }
-    this.user_header_component.delete();
-    if (this.on_click_go_to_post_page) {
-      //this._body.removeEventListener(hmUI.event.CLICK_UP, this._postClickCb);
-      this._click_helper.detach();
-    }
-    if (this._body) {
-      hmUI.deleteWidget(this._body);
-      this._body = null;
-    }
-    this.post_reactions_block_component.delete();
+    this.clean.delete();
+    this.clean = null;
+    this.user_header_component = null;
+    this.post_reactions_block_component = null;
   }
 }

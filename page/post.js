@@ -25,7 +25,9 @@ function on_post_loaded(data) {
 
   const man = new LayoutManager(safeArea);
 
-  post_component = new PostComponent(data.post);
+  post_component = new PostComponent(data.post, {
+    embiggen: true,
+  });
   separator_component = new SeparatorComponent(10);
   post_feed_component = new PostFeedComponent(data.descendants);
 

@@ -32,7 +32,7 @@ msgid "no_posts"
 msgstr "No posts\nwere loaded"
 
 msgid "load_more"
-msgstr "Load more posts"
+msgstr "Go to the next page"
 
 msgid "setup_required"
 msgstr "Setup required"

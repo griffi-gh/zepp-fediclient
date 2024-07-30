@@ -1,12 +1,15 @@
 export function pushPreserveData() {
   // const { preserveData } = getApp()._options.globalData;
-  // preserveData.stack.push(preserveData.data);
+  // preserveData.stack.push(preserveData.data ?? null);
   // preserveData.data = null;
 }
 
 export function popPreserveData() {
   // const { preserveData } = getApp()._options.globalData;
-  // if (preserveData.stack.length == 0) return;
+  // if (preserveData.stack.length == 0) {
+  //   preserveData.data = null;
+  //   return;
+  // }
   // preserveData.data = preserveData.stack.pop();
 }
 
@@ -87,4 +90,8 @@ export function reloadTimeline(timeline, max_id = null, page_idx = null) {
 
 export function gotoPost(post_id) {
   goto("post", { goto_post: post_id });
+}
+
+export function goto_user(acct_id) {
+  goto("user", { goto_acct_id: user_id });
 }

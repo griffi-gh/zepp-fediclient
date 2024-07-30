@@ -36,3 +36,40 @@ export class LayoutManager {
     this.resetStack.pop();
   }
 }
+
+export class CleanupHelper {
+  constructor() {
+    this._widgets = [];
+    this._components = [];
+    this._attachments = []; // for example, FullClickHelper
+  }
+
+  addWidget(widget) {
+    this._widgets.push(widget);
+  }
+
+  addComponent(component) {
+    this._components.push(component);
+  }
+
+  addAttachment(attachment) {
+    this._attachments.push(attachment);
+  }
+
+  delete() {
+    for (const attachment of this._attachments) {
+      attachment.detach();
+    }
+    this._attachments = [];
+
+    for (const widget of this._widgets) {
+      hmUI.deleteWidget(widget);
+    }
+    this._widgets = [];
+
+    for (const component of this._components) {
+      component.delete();
+    }
+    this._components = [];
+  }
+}

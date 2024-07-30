@@ -32,7 +32,7 @@ msgid "no_posts"
 msgstr "Публікацій\nне завантажено"
 
 msgid "load_more"
-msgstr "Завантажити ще"
+msgstr "Перейти на наступну сторінку"
 
 msgid "setup_required"
 msgstr "Необхідне\nналаштування"
