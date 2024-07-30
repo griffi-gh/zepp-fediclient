@@ -62,15 +62,15 @@ function buildUiReady(ctx) {
   }
 
   //DEBUG
-  _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
-    x: safeArea.x0,
-    y: safeArea.y1 - 90,
-    w: safeArea.w,
-    h: 40,
-    text: "[DEBUG] " + i18n("user"),
-    click_func: () => goto("user", { goto_acct_id: "9t4poqtlpilj13cr" }),
-    ...BUTTON_STYLE,
-  }));
+  // _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
+  //   x: safeArea.x0,
+  //   y: safeArea.y1 - 90,
+  //   w: safeArea.w,
+  //   h: 40,
+  //   text: "[DEBUG] " + i18n("user"),
+  //   click_func: () => goto("user", { goto_acct_id: "9t4poqtlpilj13cr" }),
+  //   ...BUTTON_STYLE,
+  // }));
 
   _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
     x: safeArea.x0,

@@ -4,6 +4,7 @@ import SeparatorComponent from './SeparatorComponent.js';
 export default class PostFeedComponent {
   constructor(posts, flags = {
     body_clickable: true,
+    user_clickable: true,
   }) {
     this.posts = posts;
     this.components = posts.map(post => {

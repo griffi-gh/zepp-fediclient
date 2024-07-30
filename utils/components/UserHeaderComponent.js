@@ -1,3 +1,6 @@
+import FullClickHelper from '../full_click.js';
+import { CleanupHelper } from '../layout.js';
+import { gotoUser } from '../navigation.js';
 import { textSize } from './../util.js';
 import InternetImageComponent from "./InternetImageComponent";
 
@@ -6,16 +9,21 @@ const PROFILE_PIC_SIZE = 28;
 // XX username
 // XX @acct@domain.name
 export default class UserHeaderComponent {
-  constructor(username, acct, profile_pic = null) {
+  constructor(username, acct, profile_pic = null, on_click_goto_acct_id = null) {
     this.username = username;
     this.acct = acct;
     this.profile_pic = profile_pic;
+    this.on_click_goto_acct_id = on_click_goto_acct_id;
+
+    this.clean = new CleanupHelper();
+
     if (this.profile_pic) {
       this.netimg_component = new InternetImageComponent(
         this.profile_pic,
         PROFILE_PIC_SIZE,
         PROFILE_PIC_SIZE,
       );
+      this.clean.addComponent(this.netimg_component);
     }
   }
 
@@ -46,7 +54,7 @@ export default class UserHeaderComponent {
     man.account(PROFILE_PIC_SIZE + PROIFLE_PIC_X_PADDING, 0);
     const sub_area_w = PROFILE_PIC_SIZE + PROIFLE_PIC_X_PADDING;
 
-    this._text_username = hmUI.createWidget(hmUI.widget.TEXT, {
+    let text_username = hmUI.createWidget(hmUI.widget.TEXT, {
       x: man.x,
       y: man.y,
       w: man.area.w - sub_area_w,
@@ -56,6 +64,7 @@ export default class UserHeaderComponent {
       color: 0xffffff,
       align_h: hmUI.align.LEFT,
     });
+    this.clean.addWidget(text_username);
 
     man.account(
       0,
@@ -63,7 +72,7 @@ export default class UserHeaderComponent {
       USERNAME_HANDLE_PADDING
     );
 
-    this._text_acct = hmUI.createWidget(hmUI.widget.TEXT, {
+    let text_acct = hmUI.createWidget(hmUI.widget.TEXT, {
       x: man.x,
       y: man.y,
       w: man.area.w - sub_area_w,
@@ -73,6 +82,7 @@ export default class UserHeaderComponent {
       color: 0xAAAAAA,
       align_h: hmUI.align.LEFT,
     });
+    this.clean.addWidget(text_acct);
 
     man.account(
       0,
@@ -81,24 +91,36 @@ export default class UserHeaderComponent {
     );
 
     man.resetX();
+
+    //TODO make other parts clickable (use group)
+    if (this.on_click_goto_acct_id) {
+      let click_helper0 = new FullClickHelper(
+        text_username,
+        this.usrHeaderClick.bind(this)
+      );
+      let click_helper1 = new FullClickHelper(
+        text_acct,
+        this.usrHeaderClick.bind(this)
+      );
+
+      click_helper0.attach();
+      click_helper1.attach();
+
+      this.clean.addAttachment(click_helper0);
+      this.clean.addAttachment(click_helper1);
+    }
+  }
+
+  usrHeaderClick() {
+    if (this._deleted) return;
+    console.log("usrHeaderClick");
+    // const target_post = this.post.reblog ?? this.post;
+    gotoUser(this.on_click_goto_acct_id);
   }
 
   delete() {
     this._deleted = true;
-    if (this._img) {
-      hmUI.deleteWidget(this._img);
-      this._img = null;
-    }
-    if (this.netimg_component) {
-      this.netimg_component.delete();
-    }
-    if (this._text_username) {
-      hmUI.deleteWidget(this._text_username);
-      this._text_username = null;
-    }
-    if (this._text_acct) {
-      hmUI.deleteWidget(this._text_acct);
-      this._text_acct = null;
-    }
+    this.clean.delete();
+    this.netimg_component = null;
   }
 }

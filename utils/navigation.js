@@ -92,6 +92,6 @@ export function gotoPost(post_id) {
   goto("post", { goto_post: post_id });
 }
 
-export function goto_user(acct_id) {
-  goto("user", { goto_acct_id: user_id });
+export function gotoUser(acct_id) {
+  goto("user", { goto_acct_id: acct_id });
 }

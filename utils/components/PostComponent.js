@@ -21,6 +21,7 @@ const TEXT_SIZE_ENLARGED = 22;
 export default class PostComponent {
   constructor(post, {
     body_clickable = false,
+    user_clickable = false,
     embiggen = false,
   } = {}) {
     this.post = post;
@@ -42,6 +43,7 @@ export default class PostComponent {
       target_post.username,
       target_post.acct,
       target_post.profile_pic,
+      user_clickable ? target_post.acct_id : null,
     );
     this.clean.addComponent(this.user_header_component);
 
