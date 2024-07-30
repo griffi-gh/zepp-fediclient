@@ -37,6 +37,7 @@ Page({
       safeArea.h,
       "_MEDIA_.png",
       { contain: "black" },
+      { SetupForOverwrite: true },
       () => {
         if (lifecycle && loading_component) {
           loading_component.delete();

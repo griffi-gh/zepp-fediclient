@@ -5,6 +5,8 @@ import FullClickHelper from '../full_click.js';
 import ReblogUserHeaderComponent from "./ReblogUserHeaderComponent.js";
 import UserHeaderComponent from "./UserHeaderComponent.js";
 import PostReactionsBlockComponent from "./PostReactionsBlockComponent.js";
+import MediaAttachmentButtonComponent from './MediaAttachmentButtonComponent.js';
+import MediaAttachmentCountComponent from './MediaAttachmentCountComponent.js';
 
 //TODO support quoted posts
 //Are those just reblogs with content attached?
@@ -23,6 +25,7 @@ export default class PostComponent {
     body_clickable = false,
     user_clickable = false,
     embiggen = false,
+    attachments = "collapse", // either "none", "collapse" or "all"
   } = {}) {
     this.post = post;
     this.on_click_go_to_post_page = !!body_clickable;
@@ -46,6 +49,31 @@ export default class PostComponent {
       user_clickable ? target_post.acct_id : null,
     );
     this.clean.addComponent(this.user_header_component);
+
+    this.attachment_components = [];
+    if (target_post.attachments.length > 0) {
+      switch (attachments) {
+        case "collapse": {
+          this._attachment_hack = true;
+          let attachment_component = new MediaAttachmentCountComponent(target_post.attachments.length);
+          this.attachment_components.push(attachment_component);
+          this.clean.addComponent(attachment_component);
+          break;
+        }
+        case "all": {
+          for (let attachment of target_post.attachments) {
+            let attachment_component = new MediaAttachmentButtonComponent(attachment);
+            this.attachment_components.push(attachment_component);
+            this.clean.addComponent(attachment_component);
+          }
+          break;
+        }
+        case "none":
+        default:
+          // do nothing
+          break;
+      }
+    }
 
     this.post_reactions_block_component = new PostReactionsBlockComponent(
       target_post.likes,
@@ -86,7 +114,17 @@ export default class PostComponent {
       text_style: hmUI.text_style.ELLIPSIS,
     });
     this.clean.addWidget(body_widget);
+    man.account(0, sz);
 
+    //ATTACHMENTS
+    for (let attachment_component of this.attachment_components) {
+      attachment_component.layout(man);
+    }
+
+    //REACT BLOCK
+    this.post_reactions_block_component.layout(man);
+
+    //Attachments:
     if (this.on_click_go_to_post_page) {
       let post_click_helper = new FullClickHelper(
         body_widget,
@@ -94,11 +132,17 @@ export default class PostComponent {
       );
       post_click_helper.attach();
       this.clean.addAttachment(post_click_helper);
-    }
-    man.account(0, sz);
 
-    //REACT BLOCK
-    this.post_reactions_block_component.layout(man);
+      //HACK: make attachments clickable
+      if (this._attachment_hack) {
+        post_click_helper = new FullClickHelper(
+          this.attachment_components[0]._text,
+          this.postClick.bind(this)
+        );
+        post_click_helper.attach();
+        this.clean.addAttachment(post_click_helper);
+      }
+    }
   }
 
   postClick(meta) {

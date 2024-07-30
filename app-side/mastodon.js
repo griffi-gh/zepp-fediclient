@@ -49,6 +49,14 @@ function transPost(post) {
     replies: post.replies_count,
 
     reblog: post.reblog ? transPost(post.reblog) : null,
+
+    attachments: post.media_attachments.map(att => {
+      return {
+        type: att.type,
+        url: att.url,
+        preview_url: att.preview_url, //TODO unused
+      };
+    }),
   };
 }
 

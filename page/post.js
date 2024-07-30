@@ -29,6 +29,7 @@ function on_post_loaded(data) {
     embiggen: true, // make the post bigger, we can afford it. nya!
     user_clickable: true,
     body_clickable: false, //that would just send us to the same page, dumb.
+    attachments: "all", // show all attachments as clickable buttons
   });
   separator_component = new SeparatorComponent(10);
   post_feed_component = new PostFeedComponent(data.descendants);

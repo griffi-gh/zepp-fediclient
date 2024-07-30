@@ -1,5 +1,3 @@
-import { safeArea } from "../util";
-
 export default class ButtonComponent {
   constructor(
     text = "Button",
@@ -25,6 +23,7 @@ export default class ButtonComponent {
         this.callback();
       },
     });
+    man.account(0, this.h);
   }
 
   delete() {

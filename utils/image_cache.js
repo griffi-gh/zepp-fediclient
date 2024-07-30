@@ -20,6 +20,10 @@ export function ensureImageCached(
   height = null,
   override_path = null,
   special = null,
+  extras = {
+    //allow overwriting existing files, added as an experiment
+    allow_overwrite: false,
+  },
 ) {
   const path = override_path ?? getCachedImagePath(url, width, height);
 
@@ -57,7 +61,10 @@ export function ensureImageCached(
       // console.log("buf len " + buf.length);
       // console.log(JSON.stringify(buf.slice(0, 16)));
 
-      const fileId = hmFS.open_asset(path, hmFS.O_WRONLY | hmFS.O_CREAT | hmFS.O_EXCL);
+      const flags = extras.allow_overwrite ?
+        (hmFS.O_WRONLY | hmFS.O_CREAT | hmFS.O_TRUNC) :
+        (hmFS.O_WRONLY | hmFS.O_CREAT | hmFS.O_EXCL);
+      const fileId = hmFS.open_asset(path, flags);
       hmFS.write(fileId, buf.buffer, 0, buf.length)
       hmFS.close(fileId);
 
