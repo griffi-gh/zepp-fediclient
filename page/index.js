@@ -1,6 +1,6 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
-import { gotoTimeline, callMeOnScreenInit, goto } from '../utils/navigation.js';
+import { goto, gotoTimeline, callMeOnScreenInit, gotoMedia } from '../utils/navigation.js';
 import LoadingAnimationComponent from '../utils/components/LoadingAnimationComponent.js';
 
 const { messageBuilder } = getApp()._options.globalData;
@@ -62,17 +62,15 @@ function buildUiReady(ctx) {
   }
 
   //DEBUG
-  /*_destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
+  _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
     x: safeArea.x0,
     y: safeArea.y1 - 90,
     w: safeArea.w,
     h: 40,
     text: "[DEBUG] " + i18n("media"),
-    click_func: () => goto("media", {
-      goto_image: "https://woem.men/proxy/static.webp?url=https%3A%2F%2Fmedia.void.rehab%2Fnull%2Fwebpublic-4ace6aac-7527-46f6-88b9-31c4e0aaff11.webp&static=1"
-    }),
+    click_func: () => gotoMedia("https://woem.men/proxy/static.webp?url=https%3A%2F%2Fmedia.void.rehab%2Fnull%2Fwebpublic-4ace6aac-7527-46f6-88b9-31c4e0aaff11.webp&static=1"),
     ...BUTTON_STYLE,
-  }));*/
+  }));
 
   _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
     x: safeArea.x0,

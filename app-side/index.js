@@ -130,13 +130,18 @@ function onRequest(ctx, req_data) {
     }
 
     case "image": {
-      const { url, width, height } = req_data;
+      const { url, width, height, special } = req_data;
 
       console.log("image request for " + url + " with size " + width + "x" + height);
 
       const url_encoded = encodeURIComponent(url);
       const desired_format = INTERNET_IMAGE_MODE === "tga" ? "jpg" : "png";
-      const url_final = `https://wsrv.nl/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`;
+      const contain_cbg = (!!special?.contain) ? (
+        special.contain === true ? "black" : special.contain.toString()
+      ) : null;
+      const url_final =
+        `https://wsrv.nl/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`
+        + (contain_cbg ? ("&fit=contain&cbg=" + contain_cbg) : "");
 
       console.log("will go to " + url_final + " to download image");
 

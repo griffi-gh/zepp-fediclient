@@ -95,3 +95,7 @@ export function gotoPost(post_id) {
 export function gotoUser(acct_id) {
   goto("user", { goto_acct_id: acct_id });
 }
+
+export function gotoMedia(image_url) {
+  goto("media", { goto_image: image_url });
+}

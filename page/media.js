@@ -35,11 +35,18 @@ Page({
       image_url,
       safeArea.w,
       safeArea.h,
-      "_MEDIA_.png"
+      "_MEDIA_.png",
+      { contain: "black" },
+      () => {
+        if (lifecycle && loading_component) {
+          loading_component.delete();
+          loading_component = null;
+        }
+      },
     );
     image_component.layout({
-      x: safeArea.x,
-      y: safeArea.y,
+      x: safeArea.x0,
+      y: safeArea.y0,
     });
 
   },

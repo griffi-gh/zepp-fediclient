@@ -4,11 +4,13 @@ import { USE_INTERNET_IMAGE } from '../../configuration.js';
 //TODO image lazy loading
 
 export default class InternetImageComponent {
-  constructor(src, width, height, override_path = null) {
+  constructor(src, width, height, override_path = null, special = null, on_load = _ => {}) {
     this.src = src;
     this.width = width;
     this.height = height;
     this.override_path = override_path;
+    this.special = special;
+    this.on_load = on_load;
   }
 
   layout(man) {
@@ -17,9 +19,6 @@ export default class InternetImageComponent {
       const man_y = man.y;
       ensureImageCached(
         this.src,
-        this.width,
-        this.height,
-        this.override_path,
         (pth) => {
           if (this._deleted) return;
           console.log("image loaded: " + pth);
@@ -31,7 +30,12 @@ export default class InternetImageComponent {
             w: this.width,
             h: this.height,
           });
-        }
+          this.on_load(pth);
+        },
+        this.width,
+        this.height,
+        this.override_path,
+        this.special,
       );
     } else {
       this._img = hmUI.createWidget(hmUI.widget.IMG, {

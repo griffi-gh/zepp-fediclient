@@ -15,10 +15,11 @@ const inProgressReqests = new Map();
 // WARN: override_path disables the cache
 export function ensureImageCached(
   url,
+  callback = _ => {},
   width = null,
   height = null,
   override_path = null,
-  callback = _ => {},
+  special = null,
 ) {
   const path = override_path ?? getCachedImagePath(url, width, height);
 
@@ -46,7 +47,7 @@ export function ensureImageCached(
   requestBin(messageBuilder,
     {
       request: "image",
-      url, width, height,
+      url, width, height, special,
     })
     .then(src_buf => {
       console.log("image downloaded");
