@@ -3,8 +3,6 @@ import { USE_INTERNET_IMAGE } from '../../configuration.js';
 
 //TODO image lazy loading
 
-const _G = getApp()._options.globalData
-
 export default class InternetImageComponent {
   constructor(src, width, height, override_path = null, special = null, extras = {}, on_load = _ => {}) {
     this.src = src;
@@ -29,8 +27,8 @@ export default class InternetImageComponent {
         (pth) => {
           if (this._deleted) return;
           if (this.extras.path_hack) {
-            _G.path_hack = "./" + (_G.path_hack ?? "");
-            pth = _G.path_hack + pth;
+            const path_hack = ("/").repeat(Math.floor(Math.random() * 256));
+            pth = path_hack + pth;
           }
           console.log("image loaded: " + pth);
           this._pth = pth;

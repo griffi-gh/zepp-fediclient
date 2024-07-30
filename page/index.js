@@ -71,6 +71,15 @@ function buildUiReady(ctx) {
   //   click_func: () => gotoMedia("https://woem.men/proxy/static.webp?url=https%3A%2F%2Fmedia.void.rehab%2Fnull%2Fwebpublic-4ace6aac-7527-46f6-88b9-31c4e0aaff11.webp&static=1"),
   //   ...BUTTON_STYLE,
   // }));
+  // _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
+  //   x: safeArea.x0,
+  //   y: safeArea.y1 - 180,
+  //   w: safeArea.w,
+  //   h: 40,
+  //   text: "[DEBUG] " + i18n("media"),
+  //   click_func: () => gotoMedia("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1920px-Google_2015_logo.svg.png"),
+  //   ...BUTTON_STYLE,
+  // }));
 
   _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
     x: safeArea.x0,
