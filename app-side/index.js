@@ -1,6 +1,7 @@
 import { tryFetchSomethingAsBinary } from "./fetch.js";
 import * as mastodon from "./mastodon.js";
 import {
+  WESERV_DOMAIN,
   INTERNET_IMAGE_MODE,
   POST_LIMIT_PER_PAGE,
   TGA_USE_RLE,
@@ -140,7 +141,7 @@ function onRequest(ctx, req_data) {
         special.contain === true ? "black" : special.contain.toString()
       ) : null;
       const url_final =
-        `https://wsrv.nl/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`
+        `https://${WESERV_DOMAIN}/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`
         + (contain_cbg ? ("&fit=contain&cbg=" + contain_cbg) : "");
 
       console.log("will go to " + url_final + " to download image");
