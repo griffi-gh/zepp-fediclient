@@ -41,6 +41,15 @@
 (Screenshots may be out of date)
 </p>
 
+<h2>Localization</h2>
+
+Supported languages (contributions welcome):
+<ul>
+  <li>English (en-US)</li>
+  <li>Ukrainian (uk-UA) (device-side only)</li>
+  <li>Polish (pl-PL) (device-side only)</li>
+</ul>
+
 <h2>Install (on a real device)</h2>
 
 Prerequisites:
@@ -138,12 +147,3 @@ Build and install from source:
 <!-- <h2>Usage</h2>
 
 (Optional) Select instance/Authentication: -->
-
-<h2>Localization</h2>
-
-Supported languages:
-<ul>
-  <li>English (en-US)</li>
-  <li>Ukrainian (uk-UA) (device-side only)</li>
-  <li>Polish (pl-PL) (device-side only)</li>
-</ul>
