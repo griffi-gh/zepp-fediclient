@@ -4,6 +4,66 @@ import quantize from "quantize";
 //Supposed to work identically to PNG2TGA for Amazfit Band 7 :3 (RLE didnt work as expected :c)
 //DOES NOT support transparency
 
+function encodeNoRle(data, width, height, pixels, idxOf) {
+  for (let i = 0; i < width * height; i++) {
+    const base = i * 3;
+    const r = pixels[base];
+    const g = pixels[base + 1];
+    const b = pixels[base + 2];
+    const pixel_idx = idxOf([r, g, b]);
+    data.push(pixel_idx);
+  }
+}
+
+function encodeRle(data, width, height, pixels, idxOf) {
+  const wh = width * height;
+
+  const pix = i => {
+    const base = i * 3;
+    const r = pixels[base];
+    const g = pixels[base + 1];
+    const b = pixels[base + 2];
+    return idxOf([r, g, b]);
+  }
+
+  let previous_packet_idx = null;
+  for (let i = 0; i < wh; ) {
+    // Get the index of the current pixel
+    const idx = pix(i);
+
+    // Count the run length of the current pixel (up to 0x7F)
+    let run = 0;
+    while (
+      ((i + run + 1) < wh) &&
+      (pix(i + run + 1) === idx) &&
+      (run < 0x7F)
+    ) {
+      run++;
+    }
+    i += run + 1;
+
+    if (run === 0) {
+      // Raw packet
+      // Check if previous packet was also raw
+      // if yes, increase the length and push the pixel
+      if (
+        (previous_packet_idx !== null) &&
+        (data[previous_packet_idx] < 0x7f)
+      ) {
+        data[previous_packet_idx]++;
+        data.push(idx);
+      } else {
+        data.push(0x00, idx);
+        previous_packet_idx = data.length - 2;
+      }
+    } else {
+      // RLE packet
+      data.push(0x80 | run, idx);
+      previous_packet_idx = data.length - 2;
+    }
+  }
+}
+
 export default function createTgaBuffer(width, height, pixels, useRLE = false) {
   console.log('createTgaBuffer');
 
@@ -108,26 +168,10 @@ export default function createTgaBuffer(width, height, pixels, useRLE = false) {
     data.push(b, g, r, 0xFF);
   }
 
-  let rle_prev_idx = 999;
-  for (let i = 0; i < width * height; i++) {
-    const base = i * 3;
-    const r = pixels[base];
-    const g = pixels[base + 1];
-    const b = pixels[base + 2];
-    const pixel_idx = idxOf([r, g, b]);
-    if (!useRLE) {
-      data.push(pixel_idx);
-    } else {
-      //TODO support raw packets
-      if (rle_prev_idx == pixel_idx) {
-        if (data[data.length - 2] != 0xff) {
-          data[data.length - 2] += 1;
-          continue
-        }
-      }
-      data.push(0x80, pixel_idx);
-      rle_prev_idx = pixel_idx;
-    }
+  if (useRLE) {
+    encodeRle(data, width, height, pixels, idxOf);
+  } else {
+    encodeNoRle(data, width, height, pixels, idxOf);
   }
 
   return new Uint8Array(data);
