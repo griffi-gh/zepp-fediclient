@@ -1,0 +1,54 @@
+# I kinda suck at Polish, so this is a best effort translation.
+# Please report any issues you find while using this
+# (Including both translation and UI issues)
+
+msgid "app_name"
+msgstr "FediClient"
+
+msgid "loading"
+msgstr "Ładowanie..."
+
+msgid "post"
+msgstr "Post"
+
+msgid "page_write"
+msgstr "Napisz post"
+
+msgid "write_reply"
+msgstr "Napisz odpowiedź"
+
+msgid "timeline_title"
+msgstr "Oś czasu"
+
+msgid "timeline_home"
+msgstr "Strona główna"
+
+msgid "timeline_public"
+msgstr "Publiczna"
+
+msgid "timeline_local"
+msgstr "Lokalna"
+
+msgid "no_more_posts"
+msgstr "Nie ma więcej postów\ndo wczytania"
+
+msgid "no_posts"
+msgstr "Nie ma postów\ndo wczytania"
+
+msgid "load_more"
+msgstr "Przejdź do następnej strony"
+
+msgid "setup_required"
+msgstr "Wymagane ustawienia"
+
+msgid "setup_required_etc"
+msgstr "Skonfiguruj serwer\ni/lub konto\nw aplikacji Zepp,\naby kontynuować"
+
+msgid "user"
+msgstr "Użytkownik"
+
+msgid "media"
+msgstr "Przeglądarka obrazów"
+
+msgid "bookmarks"
+msgstr "Zakładki"

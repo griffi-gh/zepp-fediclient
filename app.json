@@ -64,6 +64,9 @@
     },
     "uk-UA": {
       "appName": "FediClient"
+    },
+    "pl-PL": {
+      "appName": "FediClient"
     }
   },
   "defaultLanguage": "en-US"
