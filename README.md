@@ -145,4 +145,5 @@ Supported languages:
 <ul>
   <li>English (en-US)</li>
   <li>Ukrainian (uk-UA) (device-side only)</li>
+  <li>Polish (pl-PL) (device-side only)</li>
 </ul>
