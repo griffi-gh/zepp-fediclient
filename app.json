@@ -6,10 +6,11 @@
     "appType": "app",
     "version": {
       "code": 1,
-      "name": "1.0.1"
+      "name": "1.0.0"
     },
     "icon": "icon96.png",
     "vender": "griffi-gh",
+    "venderId": 7067779676,
     "description": "Open-source fediverse client for ZeppOS"
   },
   "permissions": [],
@@ -21,7 +22,7 @@
     }
   },
   "targets": {
-    "common": {
+    "band-7": {
       "module": {
         "page": {
           "pages": [
@@ -42,7 +43,15 @@
       },
       "platforms": [
         {
-          "name": "Bari(国际标准版本)",
+          "name": "amazfit-band7-nfc",
+          "deviceSource": 252
+        },
+        {
+          "name": "amazfit-band7",
+          "deviceSource": 253
+        },
+        {
+          "name": "amazfit-band7-w",
           "deviceSource": 254
         }
       ],
