@@ -21,7 +21,7 @@
     }
   },
   "targets": {
-    "194x368-amazfit-band-7": {
+    "common": {
       "module": {
         "page": {
           "pages": [
@@ -51,6 +51,9 @@
   },
   "i18n": {
     "en-US": {
+      "appName": "FediClient"
+    },
+    "uk-UA": {
       "appName": "FediClient"
     }
   },
