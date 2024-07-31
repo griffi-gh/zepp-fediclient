@@ -3,6 +3,7 @@ import { safeArea } from '../utils/util.js';
 import { callMeOnScreenInit } from "../utils/navigation";
 import LoadingAnimationComponent from "../utils/components/LoadingAnimationComponent";
 import InternetImageComponent from '../utils/components/InternetImageComponent.js';
+import { MEDIA_AVOID_CACHING, MEDIA_FORCE_RLE } from '../configuration.js';
 
 let lifecycle = false;
 
@@ -35,9 +36,16 @@ Page({
       image_url,
       safeArea.w,
       safeArea.h,
-      "_MEDIA_.png",
-      { contain: "black" },
-      { SetupForOverwrite: true },
+      {
+        override_path: MEDIA_AVOID_CACHING ? "_MEDIA_.png" : null,
+        allow_overwrite: MEDIA_AVOID_CACHING,
+        path_hack: MEDIA_AVOID_CACHING,
+        prefix: MEDIA_AVOID_CACHING ? null : "media",
+      },
+      {
+        WSRV_Contain: "black",
+        TGA_UseRLE: MEDIA_FORCE_RLE
+      },
       () => {
         if (lifecycle && loading_component) {
           loading_component.delete();

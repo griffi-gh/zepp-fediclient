@@ -4,9 +4,11 @@ import requestBin from "./request_bin.js";
 
 const { messageBuilder } = getApp()._options.globalData;
 
-export function getCachedImagePath(url, width = 0, height = 0) {
+const DEFAULT_PREFIX = "img";
+
+export function getCachedImagePath(url, width = 0, height = 0, prefix = DEFAULT_PREFIX) {
   const hashed_url = cyrb53(url).toString(16);
-  return `_img_${hashed_url}_${width}x${height}.png`;
+  return `_CACHE_${prefix}_${hashed_url}_${width}x${height}.png`;
   // return getAppDataPath(`${hashed_url}_${width}x${height}.png`);
 }
 
@@ -18,14 +20,22 @@ export function ensureImageCached(
   callback = _ => {},
   width = null,
   height = null,
-  override_path = null,
-  special = null,
-  extras = {
-    //allow overwriting existing files, added as an experiment
-    allow_overwrite: false,
-  },
+  client_param = {},
+  server_param = null,
 ) {
-  const path = override_path ?? getCachedImagePath(url, width, height);
+  //console.log(`ensureImageCached(${url}, ${width}, ${height}, ${JSON.stringify(client_param)}, ${JSON.stringify(server_param)})`);
+
+  const path = client_param.override_path ?? getCachedImagePath(
+    url, width, height,
+    client_param.prefix ?? DEFAULT_PREFIX
+  );
+
+  // path hack is a way to avoid the ZeppOS RAM cache
+  let image_view_path = path;
+  if (client_param.path_hack) {
+    let path_hack = ("/").repeat(Math.floor(Math.random() * 256));
+    image_view_path = path_hack + image_view_path;
+  }
 
   // already requested? add callback to the list
   if (inProgressReqests.has(url)) {
@@ -34,12 +44,12 @@ export function ensureImageCached(
     return;
   }
 
-  if (!override_path) {
+  if (!client_param.override_path) {
     //file exists? resolve immediately
     const [_, err] = hmFS.stat_asset(path);
     if (err === 0) {
       console.log("file exists, resolving immediately")
-      callback(path);
+      callback(image_view_path);
       return;
     }
   }
@@ -51,17 +61,15 @@ export function ensureImageCached(
   requestBin(messageBuilder,
     {
       request: "image",
-      url, width, height, special,
+      url, width, height,
+      special: server_param,
     })
     .then(src_buf => {
       console.log("image downloaded");
 
       const buf = new Uint8Array(src_buf);
 
-      // console.log("buf len " + buf.length);
-      // console.log(JSON.stringify(buf.slice(0, 16)));
-
-      const flags = extras.allow_overwrite ?
+      const flags = client_param.allow_overwrite ?
         (hmFS.O_WRONLY | hmFS.O_CREAT | hmFS.O_TRUNC) :
         (hmFS.O_WRONLY | hmFS.O_CREAT | hmFS.O_EXCL);
       const fileId = hmFS.open_asset(path, flags);
@@ -71,8 +79,8 @@ export function ensureImageCached(
       console.log("written, resolving");
 
       const resolv = inProgressReqests.get(url);
-      for (const cb of resolv) {
-        cb(path);
+      for (const resolv_callback of resolv) {
+        resolv_callback(image_view_path);
       }
       inProgressReqests.delete(url);
     });

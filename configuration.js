@@ -7,7 +7,7 @@ export const APP_ID = 1059733;
 // Deployment target
 // "simulator" - for running in the ZeppOS emulator
 // "real" - for running on a real device
-export const DEPLOYMENT_TYPE = "simulator";
+export const DEPLOYMENT_TYPE = "real";
 
 // domain of the mastodon instance to be used by default
 // (this is just the default and can be changed in the settings)
@@ -43,11 +43,22 @@ export const INTERNET_IMAGE_MODE = {
   real: "tga",
 }[DEPLOYMENT_TYPE];
 
-// Use RLE for compressing `InternetImage`s
+// Use RLE for compressing ALL `InternetImage`s
 // experimental, may be broken, use at your own risk
 // can actually increase file size in some cases, such as with small images
 // raw packets are not implemented, so even single pixels are stored as RLE (2 bytes)
 export const TGA_USE_RLE = false;
+
+// Force RLE for compressing media files
+// (e.g. large images in post attachments)
+// EVEN IF TGA_USE_RLE IS FALSE!
+export const MEDIA_FORCE_RLE = true;
+
+// Avoid caching media large media files (e.g. images in post attachments)
+// As they are stored in the app's asset directory, they can take up a lot of space
+// A terrible hack is required to make this work, so it may be broken
+// (recommended: keep as false and clear the cache manually by reinstalling the app every now and then)
+export const MEDIA_AVOID_CACHING = false;
 
 // number of posts to fetch per page on the timeline and user post pages
 // keep as low as possible to reduce memory usage

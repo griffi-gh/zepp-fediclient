@@ -118,9 +118,9 @@ export default function createTgaBuffer(width, height, pixels, useRLE = false) {
     if (!useRLE) {
       data.push(pixel_idx);
     } else {
+      //TODO support raw packets
       if (rle_prev_idx == pixel_idx) {
-        const cur_ctr = data[data.length - 2];
-        if (cur_ctr != 0xff) {
+        if (data[data.length - 2] != 0xff) {
           data[data.length - 2] += 1;
           continue
         }
@@ -129,8 +129,6 @@ export default function createTgaBuffer(width, height, pixels, useRLE = false) {
       rle_prev_idx = pixel_idx;
     }
   }
-
-  //console.log(JSON.stringify(data));
 
   return new Uint8Array(data);
 }

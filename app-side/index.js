@@ -137,8 +137,8 @@ function onRequest(ctx, req_data) {
 
       const url_encoded = encodeURIComponent(url);
       const desired_format = INTERNET_IMAGE_MODE === "tga" ? "jpg" : "png";
-      const contain_cbg = (!!special?.contain) ? (
-        special.contain === true ? "black" : special.contain.toString()
+      const contain_cbg = (!!special?.WSRV_Contain) ? (
+        (special.WSRV_Contain === true) ? "black" : special.WSRV_Contain.toString()
       ) : null;
       const url_final =
         `https://${WESERV_DOMAIN}/?url=${url_encoded}&output=${desired_format}&w=${width}&h=${height}`
@@ -153,7 +153,7 @@ function onRequest(ctx, req_data) {
         if (INTERNET_IMAGE_MODE === "tga") {
           const rawImageData = jpeg.decode(src_buf, { formatAsRGBA: false });
           console.log("decoded successfully");
-          buf = createTgaBuffer(width, height, rawImageData.data, TGA_USE_RLE);
+          buf = createTgaBuffer(width, height, rawImageData.data, special?.TGA_UseRLE ?? TGA_USE_RLE);
         } else if (INTERNET_IMAGE_MODE === "png") {
           buf = src_buf;
         }
