@@ -15,7 +15,7 @@ export const INSTANCE_DOMAIN = "mastodon.social"; // "woem.men"
 
 // Metadata of the OAuth application
 export const CLIENT_META = {
-  client_name: "ZeppOSFediClient",
+  client_name: "ZeppOSFediClient-" + DEPLOYMENT_TYPE,
   redirect_uris: {
     "real": "https://zepp-os.zepp.com/app-settings/redirect.html",
     "simulator": "http://zepp-os.zepp.com/app-settings/redirect.html",
