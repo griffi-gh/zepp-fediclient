@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./assets/194x368-amazfit-band-7/icon.png" alt="App logo">
+  <img src="./assets/band-7/icon.png" alt="App logo">
   <br>
   FediClient
 </h1>
