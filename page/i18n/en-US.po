@@ -45,3 +45,6 @@ msgstr "User"
 
 msgid "media"
 msgstr "Image viewer"
+
+msgid "bookmarks"
+msgstr "Bookmarks"

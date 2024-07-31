@@ -45,3 +45,6 @@ msgstr "Користувач"
 
 msgid "media"
 msgstr "Переглядач зображень"
+
+msgid "bookmarks"
+msgstr "Закладки"

@@ -61,6 +61,10 @@ export default class PostComponent {
           break;
         }
         case "all": {
+          this._attachment_hack = true;
+          let attachment_component = new MediaAttachmentCountComponent(target_post.attachments.length);
+          this.attachment_components.push(attachment_component);
+          this.clean.addComponent(attachment_component);
           for (let attachment of target_post.attachments) {
             let attachment_component = new MediaAttachmentButtonComponent(attachment);
             this.attachment_components.push(attachment_component);

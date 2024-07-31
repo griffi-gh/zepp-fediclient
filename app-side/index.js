@@ -1,5 +1,5 @@
 import { tryFetchSomethingAsBinary } from "./fetch.js";
-import * as mastodon from "./mastodon.js";
+import * as mastodon from "./backend/mastodon.js";
 import {
   WESERV_DOMAIN,
   INTERNET_IMAGE_MODE,
@@ -23,7 +23,6 @@ function onRequest(ctx, req_data) {
           ready: true,
           instance: mastodon.instance(),
           auth: !!settings.settingsStorage.getItem("access_token"),
-          available_timelines: mastodon.DEFAULT_TIMELINES,
         },
       });
       break;
@@ -42,6 +41,26 @@ function onRequest(ctx, req_data) {
       mastodon.fetchTimeline({
         timeline, limit, maxId, maxPostLen
       }).then(res_data => {
+        console.log("Done (trace request id: " + ctx.request.traceId + ")");
+        console.log(JSON.stringify(res_data));
+        ctx.response({
+          requestId: ctx.request.traceId,
+          data: res_data,
+        });
+      });
+      break;
+    }
+
+    case "fetchBookmarks": {
+      const limit = req_data.limit ?? POST_LIMIT_PER_PAGE;
+      const maxId = req_data.maxId ?? null;
+      const maxPostLen = req_data.maxPostLen ?? POST_MAX_LENGTH;
+
+      console.log("fetching bookmarks up to " + limit);
+      if (maxId) console.log("^ also, we got maxId: " + maxId);
+      if (maxPostLen) console.log("^ and, we will trim post content to " + maxPostLen + " chars");
+
+      mastodon.fetchBookmarks({ limit, maxId, maxPostLen }).then(res_data => {
         console.log("Done (trace request id: " + ctx.request.traceId + ")");
         console.log(JSON.stringify(res_data));
         ctx.response({

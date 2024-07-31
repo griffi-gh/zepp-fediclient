@@ -26,7 +26,7 @@
         "page": {
           "pages": [
             "page/index",
-            "page/timeline",
+            "page/feed",
             "page/post",
             "page/write",
             "page/user",

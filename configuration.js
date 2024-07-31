@@ -7,7 +7,7 @@ export const APP_ID = 1059733;
 // Deployment target
 // "simulator" - for running in the ZeppOS emulator
 // "real" - for running on a real device
-export const DEPLOYMENT_TYPE = "real";
+export const DEPLOYMENT_TYPE = "simulator";
 
 // domain of the mastodon instance to be used by default
 // (this is just the default and can be changed in the settings)

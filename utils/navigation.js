@@ -46,12 +46,13 @@ export function registerBackHandler() {
 }
 
 export function goto(page, param = {}, action = "goto") {
-  if (getApp()._options.globalData.transitioning) {
+  const _G = getApp()._options.globalData;
+  if (_G.transitioning) {
     console.log("Already transitioning, ignoring event");
     return;
   }
   console.log("[GOTO] " + page, param);
-  getApp()._options.globalData.transitioning = true;
+  _G.transitioning = true;
   //XXX: should reload pushPreserveData() here?
   switch (action) {
     case "goto":
@@ -72,24 +73,29 @@ export function goto(page, param = {}, action = "goto") {
   }
 }
 
-export function gotoTimeline(timeline, max_id = null, page_idx = null) {
-  goto("timeline", {
-    goto_timeline: timeline,
-    goto_max_id: max_id,
-    goto_page_idx: page_idx,
-  });
+export function reload(page, param = {}) {
+  goto(page, param, "reload");
 }
 
-export function reloadTimeline(timeline, max_id = null, page_idx = null) {
-  goto("timeline", {
-    goto_timeline: timeline,
-    goto_max_id: max_id,
-    goto_page_idx: page_idx,
-  }, "reload");
+export function reloadFeed(param = {}) {
+  reload("feed", param);
+}
+
+export function gotoFeed(feed = { type: "timeline", timeline: "local" }, max_id = null, page_idx = 1) {
+  goto("feed", { feed, max_id, page_idx });
+}
+
+export function gotoFeedEx(type = "timeline", timeline = "local") {
+  if (type !== "timeline") timeline = null;
+  gotoFeed({ type, timeline });
 }
 
 export function gotoPost(post_id) {
   goto("post", { goto_post: post_id });
+}
+
+export function gotoWrite() {
+  goto("write");
 }
 
 export function gotoUser(acct_id) {

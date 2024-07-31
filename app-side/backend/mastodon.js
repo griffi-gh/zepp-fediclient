@@ -1,28 +1,11 @@
-import { fetchSomething, resJson, COMMON_HEADERS } from "./fetch.js";
+import { fetchSomething, resJson, COMMON_HEADERS } from "../fetch.js";
 import {
   CLIENT_META,
   INSTANCE_DOMAIN,
   POST_LIMIT_PER_PAGE,
-} from "../configuration";
+} from "../../configuration.js";
 
 export const DEFAULT_TIMELINE = "local";
-export const DEFAULT_TIMELINES = [
-  {
-    id: "home",
-    name_i18n: "timeline_home",
-    auth: true,
-  },
-  {
-    id: "local",
-    name_i18n: "timeline_local",
-    auth: false,
-  },
-  {
-    id: "public",
-    name_i18n: "timeline_public",
-    auth: false,
-  },
-];
 
 export function instance() {
   return settings.settingsStorage.getItem("instance") ?? INSTANCE_DOMAIN;
@@ -136,6 +119,24 @@ export async function fetchUserPosts({
 
   console.log("fetching posts of user id " + acct_id + " with etc. query " + query);
   const posts_raw = await fetchSomething(`https://${instance()}/api/v1/accounts/${acct_id}/statuses?limit=${limit}${query}`);
+
+  return posts_raw
+    .map(transPost)
+    .map(post => trimPostLen(post, maxPostLen));
+}
+
+export async function fetchBookmarks({
+  limit = POST_LIMIT_PER_PAGE,
+  maxId = null,
+  maxPostLen = null,
+}) {
+  let query = "";
+  if (maxId) query += "&max_id=" + maxId;
+
+  console.log("fetching bookmarks with etc. query " + query);
+  const posts_raw = await fetchSomething(`https://${instance()}/api/v1/bookmarks?limit=${limit}${query}`);
+
+  console.log("bookmarks: " + JSON.stringify(posts_raw));
 
   return posts_raw
     .map(transPost)

@@ -1,9 +1,43 @@
 import { gettext as i18n } from 'i18n';
 import { safeArea } from '../utils/util.js';
-import { goto, gotoTimeline, callMeOnScreenInit, gotoMedia } from '../utils/navigation.js';
+import { callMeOnScreenInit, gotoFeed, gotoWrite, gotoMedia } from '../utils/navigation.js';
 import LoadingAnimationComponent from '../utils/components/LoadingAnimationComponent.js';
 
 const { messageBuilder } = getApp()._options.globalData;
+
+const ACTIVITIES = [
+  {
+    feed: {
+      type: "timeline",
+      timeline: "home",
+    },
+    name_i18n: "timeline_home",
+    auth: true,
+  },
+  {
+    feed: {
+      type: "timeline",
+      timeline: "local",
+    },
+    name_i18n: "timeline_local",
+    auth: false,
+  },
+  {
+    feed: {
+      type: "timeline",
+      timeline: "public",
+    },
+    name_i18n: "timeline_public",
+    auth: false,
+  },
+  // {
+  //   feed: {
+  //     type: "bookmarks",
+  //   },
+  //   name_i18n: "bookmarks",
+  //   auth: true,
+  // },
+];
 
 let lifecycle = false,
     loading_component = null,
@@ -41,36 +75,38 @@ function buildUiReady(ctx) {
   }));
   yy += 32 + 4;
 
-  for (const timeline of ctx.available_timelines) {
-    const timeline_actually_available = (!timeline.auth) || ctx.auth;
+  for (const activity of ACTIVITIES) {
+    const activity_actually_available = (!activity.auth) || ctx.auth;
     const btn = hmUI.createWidget(hmUI.widget.BUTTON, {
       x: safeArea.x0,
       y: yy,
       w: safeArea.w,
       h: 40,
-      text: i18n(timeline.name_i18n),
+      text: i18n(activity.name_i18n),
       click_func: () => {
-        if (timeline_actually_available) {
-          gotoTimeline(timeline.id);
+        if (activity_actually_available) {
+          gotoFeed(activity.feed);
         }
       },
-      ...(timeline_actually_available ? BUTTON_STYLE: BUTTON_STYLE_DISABLED),
+      ...(activity_actually_available ? BUTTON_STYLE: BUTTON_STYLE_DISABLED),
     });
-    btn.setEnable(timeline_actually_available);
+    if (!activity_actually_available) {
+      btn.setEnable(false);
+    }
     _destroy.push(btn);
     yy += 40 + 4;
   }
 
   //DEBUG
-  _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
-    x: safeArea.x0,
-    y: safeArea.y1 - 90,
-    w: safeArea.w,
-    h: 40,
-    text: "[DEBUG] " + i18n("media"),
-    click_func: () => gotoMedia("https://woem.men/proxy/static.webp?url=https%3A%2F%2Fmedia.void.rehab%2Fnull%2Fwebpublic-4ace6aac-7527-46f6-88b9-31c4e0aaff11.webp&static=1"),
-    ...BUTTON_STYLE,
-  }));
+  // _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
+  //   x: safeArea.x0,
+  //   y: safeArea.y1 - 90,
+  //   w: safeArea.w,
+  //   h: 40,
+  //   text: "[DEBUG] " + i18n("media"),
+  //   click_func: () => gotoMedia("https://woem.men/proxy/static.webp?url=https%3A%2F%2Fmedia.void.rehab%2Fnull%2Fwebpublic-4ace6aac-7527-46f6-88b9-31c4e0aaff11.webp&static=1"),
+  //   ...BUTTON_STYLE,
+  // }));
   // _destroy.push(hmUI.createWidget(hmUI.widget.BUTTON, {
   //   x: safeArea.x0,
   //   y: safeArea.y1 - 180,
@@ -87,7 +123,7 @@ function buildUiReady(ctx) {
     w: safeArea.w,
     h: 40,
     text: i18n("page_write"),
-    click_func: () => goto("write"),
+    click_func: () => gotoWrite(),
     ...BUTTON_STYLE,
   }));
 }
