@@ -52,14 +52,15 @@ Prerequisites:
 </ul>
 
 <p>
-  Warning: Make sure <code>DEPLOYMENT_TYPE</code> is set to <code>"real"</code> in configuration.js
+  Warning: Make sure <code>DEPLOYMENT_TYPE</code> is set to <code>"real"</code> in configuration.js.<br>
+  (Optional) Some options can only be changed at compile-time, check/modify <code>configuration.js</code> as needed
 </p>
 
 Build and install from source:
+
+<h3>Using preview/QR-code:</h3>
+
 <ol>
-  <!-- <li>
-    (Optional) Some options can only be changed at compile-time, check/modify <code>configuration.js</code> as needed
-  </li> -->
   <li>
     Run <code>zeus preview</code> in the project directory
     <ul>
@@ -72,7 +73,7 @@ Build and install from source:
     </ul>
   </li>
   <li>
-    Open the Zepp App
+    Open the Zepp App on your phone
   </li>
   <li>
     Go to "Profile" -> "My devices" -> (tap on your device) -> "Developer Mode"
@@ -85,6 +86,52 @@ Build and install from source:
     <ul>
       <li>If you're unable to scan the QR code using your camera, use the "Open G..." button (in the top-right corner, on the "Scan" screen) to select a screenshot of the code instead</li>
     </ul>
+  </li>
+</ol>
+
+<h3>Using the bridge mode:</h3>
+
+<ol>
+  <li>
+    Run <code>zeus login</code> and follow the on-screen instructions.
+    <ul>
+      <li>Make sure to use the same Zepp account as in the Zepp app on your phone.</li>
+      <li>If you accidentally used a wrong account, use <code>zeus logout</code> and try again</li>
+    </ul>
+  </li>
+  <li>
+    Open the Zepp App on your phone
+  </li>
+  <li>
+    Go to "Profile" -> "My devices" -> (tap on your device) -> "Developer Mode"
+  </li>
+  <li>
+    Switch to the "Mini Program" tab and tap the Plus (+) icon in the top-right corner
+  </li>
+  <li>
+    Select the "Bridge" option and wait for it to connect
+  </li>
+  <li>
+    Run <code>zeus bridge</code> in the project directory<br>
+  </li>
+  <li>
+    Once it starts, type in the following commands:
+    <ul>
+      <li>
+        <code>connect</code> (if prompted, select <code>app-Android</code>, wait for it to connect)
+      </li>
+      <li>
+        <code>install</code> (this may take up to a couple of minutes)
+      </li>
+      <li>
+        <code>exit</code> to exit the bridge mode
+      </li>
+    </ul>
+  </li>
+  <li>
+    Follow the steps 2-5 again to disable the bridge mode in the Zepp App.<br>
+    This should disconnect the watch from the bridge server.<br>
+    <i>(Alternatively, you can just wait a couple of hours, the app will disconnect bridge mode automatically)</i>
   </li>
 </ol>
 
