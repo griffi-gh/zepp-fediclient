@@ -4,15 +4,17 @@
   FediClient
 </h1>
 <h3 align="center">
-  Open-source Mastodon client for ZeppOS
+  Open-source Mastodon client for Amazfit ZeppOS
 </h3>
 
 <b>Features:</b>
 <ul>
   <li>Supports Mastodon API (/Sharkey) (Misskey support planned)</li>
   <li>Viewing timelines (Local/Public/Home)</li>
-  <li>Viewing post/post replies</li>
+  <li>Viewing posts/post replies</li>
   <li>Profile pictures (dynamically generated tga; loaded asynchronously)</li>
+  <li>Viewing post image attachments</li>
+  <li>Viewing user profiles</li>
   <li>Posting (with a t-9 style keyboard)</li>
   <li>Authentication (optional, OAuth)</li>
   <li>Localization</li>
@@ -33,6 +35,8 @@
 -->&nbsp;&nbsp;<!--
 --><img src=".assets/zepp_screenshot_1717272729052.png" alt="Timeline screenshot 2">
 </span>
+<br>
+<img src=".assets/qemu-system-arm.gif" alt="">
 <p>
 (Screenshots may be out of date)
 </p>
